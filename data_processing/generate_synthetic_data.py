@@ -6,7 +6,7 @@ from pathlib import Path
 
 np.random.seed(42)
 
-N = 1000  # number of samples
+N = 1000
 
 data = {
     "supplier_reliability": np.random.uniform(0.6, 1.0, N),

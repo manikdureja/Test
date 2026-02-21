@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect, useCallback, useRef } from "react";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -10,7 +8,7 @@ async function apiFetch(path) {
   return res.json();
 }
 
-const CAT_COLOR   = { Energy:"#f59e0b", Metals:"#22d3ee", Agriculture:"#10b981", Industrial:"#a78bfa" };
+const CAT_COLOR   = { Energy:"#f59e0b", Metals:"#00e5ff", Agriculture:"#10b981", Industrial:"#a78bfa" };
 const MODEL_COLOR = { "Linear Trend":"#8b5cf6", "Exp. Smoothing":"#10b981", "Moving Avg.":"#f43f5e", "Ensemble":"#f59e0b" };
 const MODEL_KEYS  = ["Linear Trend","Exp. Smoothing","Moving Avg.","Ensemble"];
 const CAT_KEYS    = ["All","Energy","Metals","Agriculture","Industrial"];
@@ -43,7 +41,7 @@ function ForecastChart({ historical, foreYears, activeModelData, catColor }) {
   const W = 680, H = 210, PL = 60, PR = 14, PT = 12, PB = 30;
 
   if (!historical?.length || !activeModelData) return (
-    <div style={{ height: H, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.2)", fontSize: 12 }}>
+    <div style={{ height: H, display: "flex", alignItems: "center", justifyContent: "center", color: "#6a7a8a", fontSize: 12 }}>
       Loading chart...
     </div>
   );
@@ -100,19 +98,19 @@ function ForecastChart({ historical, foreYears, activeModelData, catColor }) {
         const lbl = val >= 10000 ? `${(val / 1000).toFixed(0)}k` : val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val >= 10 ? val.toFixed(1) : val.toFixed(3);
         return (
           <g key={i}>
-            <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-            <text x={PL - 5} y={y + 4} fontSize="9" fill="rgba(255,255,255,0.28)" textAnchor="end">{lbl}</text>
+            <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="#1e2a3a" strokeWidth="1" />
+            <text x={PL - 5} y={y + 4} fontSize="9" fill="#6a7a8a" textAnchor="end">{lbl}</text>
           </g>
         );
       })}
 
       {xLabels.map(({ yr, i }) => (
-        <text key={yr} x={xS(i)} y={H - PB + 14} fontSize="9" fill="rgba(255,255,255,0.22)" textAnchor="middle">{yr}</text>
+        <text key={yr} x={xS(i)} y={H - PB + 14} fontSize="9" fill="#6a7a8a" textAnchor="middle">{yr}</text>
       ))}
 
       <line x1={xS(splitIdx)} y1={PT} x2={xS(splitIdx)} y2={H - PB}
-        stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="3,3" />
-      <text x={xS(splitIdx) + 5} y={PT + 10} fontSize="8" fill="rgba(255,255,255,0.25)" letterSpacing="0.5">
+        stroke="#2e3a4a" strokeWidth="1" strokeDasharray="3,3" />
+      <text x={xS(splitIdx) + 5} y={PT + 10} fontSize="8" fill="#8a9ab0" letterSpacing="0.5">
         FORECAST →
       </text>
 
@@ -127,35 +125,31 @@ function ForecastChart({ historical, foreYears, activeModelData, catColor }) {
 
       {histVals.slice(-5).map((v, i) => (
         <circle key={i} cx={xS(histVals.length - 5 + i)} cy={yS(v)} r="2.5"
-          fill={catColor} stroke="#0e1117" strokeWidth="1.3" />
+          fill={catColor} stroke="#0f1825" strokeWidth="1.3" />
       ))}
 
-      {/* Forecast dots */}
       {foreVals.map((v, i) => (
         <circle key={i} cx={xS(splitIdx + 1 + i)} cy={yS(v)} r="3"
-          fill="#f59e0b" stroke="#0e1117" strokeWidth="1.3" />
+          fill="#f59e0b" stroke="#0f1825" strokeWidth="1.3" />
       ))}
     </svg>
   );
 }
 
-/* ─── Loading skeleton ───────────────────────────────────────────────────────── */
 function Skeleton({ w = "100%", h = 14, radius = 4 }) {
   return (
     <div style={{
       width: w, height: h, borderRadius: radius,
-      background: "rgba(255,255,255,0.05)",
+      background: "#1e2a3a",
       animation: "pulse 1.5s ease-in-out infinite"
     }} />
   );
 }
 
-/* ─── Main PriceForecast page ────────────────────────────────────────────────── */
 export default function PriceForecast() {
-  /* ── State ── */
-  const [commodities, setCommodities]   = useState([]);   // list from /api/forecast/commodities
+  const [commodities, setCommodities]   = useState([]);
   const [selected, setSelected]         = useState(null);
-  const [forecastData, setForecastData] = useState(null); // from /api/forecast/{commodity}
+  const [forecastData, setForecastData] = useState(null);
   const [activeModel, setActiveModel]   = useState("Ensemble");
   const [catFilter, setCatFilter]       = useState("All");
   const [horizon, setHorizon]           = useState(5);
@@ -165,7 +159,6 @@ export default function PriceForecast() {
   const [error, setError]               = useState(null);
   const abortRef = useRef(null);
 
-  /* ── Load commodity list on mount ── */
   useEffect(() => {
     setLoadingList(true);
     apiFetch("/api/forecast/commodities")
@@ -177,7 +170,6 @@ export default function PriceForecast() {
       .catch(e => { setError(e.message); setLoadingList(false); });
   }, []);
 
-  /* ── Load forecast when selected or horizon changes ── */
   useEffect(() => {
     if (!selected) return;
     if (abortRef.current) abortRef.current.abort();
@@ -195,13 +187,12 @@ export default function PriceForecast() {
       .catch(e => { if (e.name !== "AbortError") { setError(e.message); setLoadingFore(false); } });
   }, [selected, horizon]);
 
-  /* ── Derived values ── */
   const filtered = catFilter === "All"
     ? commodities
     : commodities.filter(c => c.category === catFilter);
 
   const curMeta = commodities.find(c => c.name === selected);
-  const catColor = CAT_COLOR[curMeta?.category] || "#64748b";
+  const catColor = CAT_COLOR[curMeta?.category] || "#00e5ff";
 
   const activeModelData = forecastData?.models?.[activeModel];
   const ensembleData    = forecastData?.models?.["Ensemble"];
@@ -212,35 +203,27 @@ export default function PriceForecast() {
   const ret    = latest ? (target - latest) / latest * 100 : 0;
   const signal = ensembleData?.signal ?? "HOLD";
   const mape   = activeModelData?.mape ?? 0;
-  const signalColor = signal === "BUY" ? "#10b981" : signal === "SELL" ? "#ef4444" : "#f59e0b";
+  const signalColor = signal === "BUY" ? "#00ff88" : signal === "SELL" ? "#ff4444" : "#f59e0b";
 
-  /* ── Render ── */
   return (
-    <div style={{
-      padding: "28px 32px", color: "#fff", minHeight: "100vh",
-      background: "#0e1117", fontFamily: "'Courier New', monospace"
+    <div className="flex-1 overflow-y-auto" style={{
+      padding: "28px 32px", color: "#dde3f0", minHeight: "100%",
+      background: "transparent"
     }}>
       <style>{`
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-        select option { background: #1a1f2e; }
+        select option { background: #0a0e1a; }
         ::-webkit-scrollbar { width:4px; }
-        ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+        ::-webkit-scrollbar-thumb { background:#1e2a3a; border-radius:2px; }
       `}</style>
 
       {/* ── Page Title ── */}
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{
-          fontSize: 26, fontWeight: 700, margin: 0,
-          fontFamily: "'Segoe UI', system-ui, sans-serif",
-          color: "#fff", letterSpacing: "-0.3px"
-        }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0, color: "#ffffff", letterSpacing: "-0.3px" }}>
           Price Forecast
         </h1>
-        <p style={{
-          margin: "4px 0 0", fontSize: 13,
-          color: "rgba(255,255,255,0.38)", letterSpacing: "0.3px"
-        }}>
+        <p style={{ margin: "4px 0 0", fontSize: 13, color: "#6a7a8a", letterSpacing: "0.3px" }}>
           Synthetic commodity data · Model trained on {curMeta ? `${curMeta.hist_years?.at(-1) - curMeta.hist_years?.at(0) + 1 || 36} years` : "live"} of annual price data · {activeModel} active
         </p>
       </div>
@@ -249,7 +232,7 @@ export default function PriceForecast() {
         <div style={{
           padding: "10px 16px", marginBottom: 16, borderRadius: 6,
           background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)",
-          fontSize: 12, color: "#ef4444"
+          fontSize: 12, color: "#ff4444"
         }}>
           ⚠ {error} — ensure backend is running and synthetic data exists (run: <code>python data_processing/generate_synthetic_data.py</code>)
         </div>
@@ -258,42 +241,26 @@ export default function PriceForecast() {
       {/* ── Filter Row ── */}
       <div style={{
         display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
-        marginBottom: 18, background: "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "14px 18px"
+        marginBottom: 18, background: "#0f1825",
+        border: "1px solid #1e2a3a", borderRadius: 8, padding: "14px 18px"
       }}>
         {[
-          {
-            label: "CATEGORY",
-            options: CAT_KEYS,
-            value: catFilter,
-            set: setCatFilter
-          },
-          {
-            label: "MODEL",
-            options: MODEL_KEYS,
-            value: activeModel,
-            set: setActiveModel
-          },
-          {
-            label: "HORIZON",
-            options: [3, 5, 7].map(h => `${h}Y`),
-            value: `${horizon}Y`,
-            set: v => setHorizon(parseInt(v))
-          },
+          { label: "CATEGORY", options: CAT_KEYS, value: catFilter, set: setCatFilter },
+          { label: "MODEL", options: MODEL_KEYS, value: activeModel, set: setActiveModel },
+          { label: "HORIZON", options: [3, 5, 7].map(h => `${h}Y`), value: `${horizon}Y`, set: v => setHorizon(parseInt(v)) },
         ].map(({ label, options, value, set }) => (
           <div key={label}>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.32)", letterSpacing: "0.8px", marginBottom: 6 }}>
+            <div style={{ fontSize: 10, color: "#6a7a8a", letterSpacing: "0.2em", fontFamily: "monospace", marginBottom: 6 }}>
               {label}
             </div>
             <select
               value={value}
               onChange={e => set(e.target.value)}
               style={{
-                width: "100%", background: "#0e1117",
-                border: "1px solid rgba(255,255,255,0.12)", borderRadius: 5,
-                color: "rgba(255,255,255,0.82)", fontSize: 12,
-                padding: "6px 10px", fontFamily: "'Courier New', monospace",
-                cursor: "pointer", outline: "none", appearance: "none"
+                width: "100%", background: "#0a0e1a",
+                border: "1px solid #1e2a3a", borderRadius: 5,
+                color: "#dde3f0", fontSize: 12,
+                padding: "8px 10px", outline: "none", appearance: "none", cursor: "pointer"
               }}
             >
               {options.map(o => <option key={o} value={o}>{o}</option>)}
@@ -309,13 +276,13 @@ export default function PriceForecast() {
             label: "CURRENT PRICE",
             value: loadingList ? null : `${fmt(latest)}`,
             sub: curMeta ? `${curMeta.unit} · ${curMeta.latest_year}` : "—",
-            color: "rgba(255,255,255,0.85)"
+            color: "#ffffff"
           },
           {
             label: "YOY CHANGE",
             value: loadingList ? null : pct(yoy),
             sub: `vs ${curMeta ? curMeta.latest_year - 1 : "—"}`,
-            color: yoy >= 0 ? "#10b981" : "#ef4444"
+            color: yoy >= 0 ? "#00ff88" : "#ff4444"
           },
           {
             label: `${horizon}Y TARGET`,
@@ -327,24 +294,21 @@ export default function PriceForecast() {
             label: `${horizon}Y RETURN`,
             value: loadingFore || !target ? null : pct(ret),
             sub: signal,
-            color: ret >= 0 ? "#10b981" : "#ef4444"
+            color: ret >= 0 ? "#00ff88" : "#ff4444"
           },
         ].map(({ label, value, sub, color }) => (
           <div key={label} style={{
-            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
+            background: "#0f1825", border: "1px solid #1e2a3a",
             borderRadius: 8, padding: "18px 20px"
           }}>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.32)", letterSpacing: "0.8px", marginBottom: 10 }}>
+            <div style={{ fontSize: 10, color: "#6a7a8a", letterSpacing: "0.2em", fontFamily: "monospace", marginBottom: 10 }}>
               {label}
             </div>
             {value === null
               ? <Skeleton h={28} w="70%" />
-              : <div style={{
-                  fontSize: 24, fontWeight: 700, color,
-                  letterSpacing: "-0.5px", fontFamily: "'Segoe UI',system-ui,sans-serif"
-                }}>{value}</div>
+              : <div style={{ fontSize: 24, fontWeight: 700, color, letterSpacing: "-0.5px" }}>{value}</div>
             }
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.28)", marginTop: 5 }}>{sub}</div>
+            <div style={{ fontSize: 11, color: "#8a9ab0", marginTop: 5 }}>{sub}</div>
           </div>
         ))}
       </div>
@@ -354,18 +318,17 @@ export default function PriceForecast() {
 
         {/* Left: Chart / Table panel */}
         <div style={{
-          background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
+          background: "#0f1825", border: "1px solid #1e2a3a",
           borderRadius: 8, padding: "20px 22px"
         }}>
-          {/* Panel header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
             <div>
-              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.32)", letterSpacing: "0.8px" }}>
+              <span style={{ fontSize: 10, color: "#6a7a8a", letterSpacing: "0.2em", fontFamily: "monospace" }}>
                 {selected ? selected.toUpperCase() : "—"} · PRICE HISTORY & FORECAST
               </span>
               <div style={{ display: "flex", gap: 6, marginTop: 4, alignItems: "center" }}>
                 <span style={{ width: 8, height: 8, borderRadius: "50%", background: catColor, display: "inline-block" }} />
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.38)" }}>
+                <span style={{ fontSize: 11, color: "#8a9ab0" }}>
                   {curMeta?.category || "—"} · {curMeta?.unit || "—"}
                   {!loadingFore && activeModelData && ` · MAPE ${mape}%`}
                 </span>
@@ -381,32 +344,30 @@ export default function PriceForecast() {
               {["chart", "table"].map(t => (
                 <button key={t} onClick={() => setView(t)} style={{
                   fontSize: 10, padding: "4px 12px", borderRadius: 4, cursor: "pointer", letterSpacing: "0.5px",
-                  background: view === t ? "rgba(255,255,255,0.07)" : "transparent",
-                  border: view === t ? "1px solid rgba(255,255,255,0.15)" : "1px solid transparent",
-                  color: view === t ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.3)"
+                  background: view === t ? "#1e2a3a" : "transparent",
+                  border: view === t ? "1px solid #2e3a4a" : "1px solid transparent",
+                  color: view === t ? "#dde3f0" : "#6a7a8a"
                 }}>{t.toUpperCase()}</button>
               ))}
             </div>
           </div>
 
-          {/* Model selector */}
           <div style={{ display: "flex", gap: 5, marginBottom: 14, flexWrap: "wrap" }}>
             {MODEL_KEYS.map(m => (
               <button key={m} onClick={() => setActiveModel(m)} style={{
                 fontSize: 10, padding: "4px 10px", borderRadius: 4, cursor: "pointer",
                 display: "flex", alignItems: "center", gap: 5,
                 background: activeModel === m ? `${MODEL_COLOR[m]}12` : "transparent",
-                border: activeModel === m ? `1px solid ${MODEL_COLOR[m]}35` : "1px solid rgba(255,255,255,0.06)",
-                color: activeModel === m ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.33)"
+                border: activeModel === m ? `1px solid ${MODEL_COLOR[m]}35` : "1px solid #1e2a3a",
+                color: activeModel === m ? "#dde3f0" : "#6a7a8a"
               }}>
                 <span style={{
                   width: 6, height: 6, borderRadius: "50%", background: MODEL_COLOR[m],
-                  display: "inline-block",
-                  boxShadow: activeModel === m ? `0 0 5px ${MODEL_COLOR[m]}` : "none"
+                  display: "inline-block", boxShadow: activeModel === m ? `0 0 5px ${MODEL_COLOR[m]}` : "none"
                 }} />
                 {m}
                 {forecastData?.models?.[m] && (
-                  <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", marginLeft: 2 }}>
+                  <span style={{ fontSize: 9, color: "#8a9ab0", marginLeft: 2 }}>
                     {forecastData.models[m].mape}%
                   </span>
                 )}
@@ -414,22 +375,13 @@ export default function PriceForecast() {
             ))}
           </div>
 
-          {/* Chart or table */}
           {view === "chart" ? (
             loadingFore || !forecastData ? (
-              <div style={{ height: 210 }}>
-                <Skeleton h={210} radius={6} />
-              </div>
+              <div style={{ height: 210 }}><Skeleton h={210} radius={6} /></div>
             ) : (
-              <ForecastChart
-                historical={forecastData.historical}
-                foreYears={forecastData.fore_years}
-                activeModelData={activeModelData}
-                catColor={catColor}
-              />
+              <ForecastChart historical={forecastData.historical} foreYears={forecastData.fore_years} activeModelData={activeModelData} catColor={catColor} />
             )
           ) : (
-            /* Table view */
             <div style={{ overflowX: "auto", maxHeight: 280, overflowY: "auto" }}>
               {loadingFore || !forecastData ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -442,45 +394,43 @@ export default function PriceForecast() {
                       {["Year","Type","Price","YoY Δ","vs Now","CI Low","CI High"].map(h => (
                         <th key={h} style={{
                           padding: "6px 10px", textAlign: "left", fontSize: 9,
-                          color: "rgba(255,255,255,0.28)", letterSpacing: "0.5px", fontWeight: 500,
-                          borderBottom: "1px solid rgba(255,255,255,0.07)"
+                          color: "#6a7a8a", letterSpacing: "0.5px", fontWeight: 500,
+                          borderBottom: "1px solid #1e2a3a"
                         }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Last 6 historical */}
                     {forecastData.historical.slice(-6).map((p, i, arr) => {
                       const prev = arr[i - 1];
                       const yoyc = prev ? (p.value - prev.value) / prev.value * 100 : 0;
                       const vlc  = (p.value - latest) / latest * 100;
                       return (
-                        <tr key={p.year} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                          <td style={{ padding: "7px 10px", color: "rgba(255,255,255,0.5)" }}>{p.year}</td>
-                          <td><span style={{ fontSize: 9, background: "rgba(34,211,238,0.1)", color: "#22d3ee", borderRadius: 3, padding: "2px 6px" }}>HIST</span></td>
-                          <td style={{ padding: "7px 10px", color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>{fmt(p.value)}</td>
-                          <td style={{ padding: "7px 10px", color: yoyc >= 0 ? "#10b981" : "#ef4444" }}>{pct(yoyc)}</td>
-                          <td style={{ padding: "7px 10px", color: vlc >= 0 ? "#10b981" : "#ef4444" }}>{pct(vlc)}</td>
-                          <td style={{ padding: "7px 10px", color: "rgba(255,255,255,0.25)" }}>—</td>
-                          <td style={{ padding: "7px 10px", color: "rgba(255,255,255,0.25)" }}>—</td>
+                        <tr key={p.year} style={{ borderBottom: "1px solid #1e2a3a" }}>
+                          <td style={{ padding: "7px 10px", color: "#8a9ab0" }}>{p.year}</td>
+                          <td><span style={{ fontSize: 9, background: "rgba(34,211,238,0.1)", color: "#00e5ff", borderRadius: 3, padding: "2px 6px" }}>HIST</span></td>
+                          <td style={{ padding: "7px 10px", color: "#dde3f0", fontWeight: 600 }}>{fmt(p.value)}</td>
+                          <td style={{ padding: "7px 10px", color: yoyc >= 0 ? "#00ff88" : "#ff4444" }}>{pct(yoyc)}</td>
+                          <td style={{ padding: "7px 10px", color: vlc >= 0 ? "#00ff88" : "#ff4444" }}>{pct(vlc)}</td>
+                          <td style={{ padding: "7px 10px", color: "#6a7a8a" }}>—</td>
+                          <td style={{ padding: "7px 10px", color: "#6a7a8a" }}>—</td>
                         </tr>
                       );
                     })}
-                    {/* Forecast rows */}
                     {activeModelData && forecastData.fore_years.map((yr, i) => {
                       const v = activeModelData.fore_vals[i];
                       const pv = i === 0 ? latest : activeModelData.fore_vals[i - 1];
                       const yoyc = pv ? (v - pv) / pv * 100 : 0;
                       const vlc  = (v - latest) / latest * 100;
                       return (
-                        <tr key={yr} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                          <td style={{ padding: "7px 10px", color: "rgba(255,255,255,0.5)" }}>{yr}</td>
+                        <tr key={yr} style={{ borderBottom: "1px solid #1e2a3a" }}>
+                          <td style={{ padding: "7px 10px", color: "#8a9ab0" }}>{yr}</td>
                           <td><span style={{ fontSize: 9, background: "rgba(245,158,11,0.1)", color: "#f59e0b", borderRadius: 3, padding: "2px 6px" }}>FORE</span></td>
-                          <td style={{ padding: "7px 10px", color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>{fmt(v)}</td>
-                          <td style={{ padding: "7px 10px", color: yoyc >= 0 ? "#10b981" : "#ef4444" }}>{pct(yoyc)}</td>
-                          <td style={{ padding: "7px 10px", color: vlc >= 0 ? "#10b981" : "#ef4444" }}>{pct(vlc)}</td>
-                          <td style={{ padding: "7px 10px", color: "rgba(255,255,255,0.3)" }}>{fmt(activeModelData.fore_lower[i])}</td>
-                          <td style={{ padding: "7px 10px", color: "rgba(255,255,255,0.3)" }}>{fmt(activeModelData.fore_upper[i])}</td>
+                          <td style={{ padding: "7px 10px", color: "#dde3f0", fontWeight: 600 }}>{fmt(v)}</td>
+                          <td style={{ padding: "7px 10px", color: yoyc >= 0 ? "#00ff88" : "#ff4444" }}>{pct(yoyc)}</td>
+                          <td style={{ padding: "7px 10px", color: vlc >= 0 ? "#00ff88" : "#ff4444" }}>{pct(vlc)}</td>
+                          <td style={{ padding: "7px 10px", color: "#6a7a8a" }}>{fmt(activeModelData.fore_lower[i])}</td>
+                          <td style={{ padding: "7px 10px", color: "#6a7a8a" }}>{fmt(activeModelData.fore_upper[i])}</td>
                         </tr>
                       );
                     })}
@@ -493,35 +443,30 @@ export default function PriceForecast() {
 
         {/* Right: Commodity tracker panel */}
         <div style={{
-          background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
+          background: "#0f1825", border: "1px solid #1e2a3a",
           borderRadius: 8, padding: "20px 20px", display: "flex", flexDirection: "column"
         }}>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.32)", letterSpacing: "0.8px", marginBottom: 14 }}>
+          <div style={{ fontSize: 10, color: "#6a7a8a", letterSpacing: "0.2em", fontFamily: "monospace", marginBottom: 14 }}>
             COMMODITY TRACKER
           </div>
 
-          {/* Category pills */}
           <div style={{ display: "flex", gap: 4, marginBottom: 12, flexWrap: "wrap" }}>
             {CAT_KEYS.map(c => (
               <button key={c} onClick={() => setCatFilter(c)} style={{
                 fontSize: 9, padding: "3px 9px", borderRadius: 3, cursor: "pointer", letterSpacing: "0.5px",
-                background: catFilter === c ? "rgba(255,255,255,0.07)" : "transparent",
-                border: catFilter === c ? "1px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.05)",
-                color: catFilter === c ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.3)"
+                background: catFilter === c ? "#1e2a3a" : "transparent",
+                border: catFilter === c ? "1px solid #2e3a4a" : "1px solid #1e2a3a",
+                color: catFilter === c ? "#dde3f0" : "#6a7a8a"
               }}>{c.toUpperCase()}</button>
             ))}
           </div>
 
-          {/* Commodity rows */}
           <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
             {loadingList
               ? Array.from({ length: 8 }, (_, i) => (
-                  <div key={i} style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "flex", gap: 10, alignItems: "center" }}>
-                    <div style={{ width: 4, height: 28, borderRadius: 2, background: "rgba(255,255,255,0.04)" }} />
-                    <div style={{ flex: 1 }}>
-                      <Skeleton h={11} w="60%" />
-                      <div style={{ marginTop: 6 }}><Skeleton h={4} /></div>
-                    </div>
+                  <div key={i} style={{ padding: "10px 0", borderBottom: "1px solid #1e2a3a", display: "flex", gap: 10, alignItems: "center" }}>
+                    <div style={{ width: 4, height: 28, borderRadius: 2, background: "#1e2a3a" }} />
+                    <div style={{ flex: 1 }}><Skeleton h={11} w="60%" /><div style={{ marginTop: 6 }}><Skeleton h={4} /></div></div>
                   </div>
                 ))
               : filtered.map(c => {
@@ -535,43 +480,28 @@ export default function PriceForecast() {
                       display: "flex", alignItems: "center", gap: 10,
                       padding: "10px 0", cursor: "pointer", textAlign: "left",
                       background: "transparent", border: "none",
-                      borderBottom: "1px solid rgba(255,255,255,0.04)",
+                      borderBottom: "1px solid #1e2a3a",
                       opacity: isActive ? 1 : 0.72, transition: "opacity 0.12s"
                     }}>
-                      {/* Active indicator bar */}
-                      <div style={{
-                        width: 4, height: 30, borderRadius: 2, flexShrink: 0,
-                        background: isActive ? cc : "transparent"
-                      }} />
-
+                      <div style={{ width: 4, height: 30, borderRadius: 2, flexShrink: 0, background: isActive ? cc : "transparent" }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                          <span style={{
-                            fontSize: 12,
-                            color: isActive ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.58)",
-                            fontWeight: isActive ? 600 : 400
-                          }}>{c.name}</span>
-                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.82)", fontFamily: "'Courier New',monospace" }}>
+                          <span style={{ fontSize: 12, color: isActive ? "#ffffff" : "#8a9ab0", fontWeight: isActive ? 600 : 400 }}>
+                            {c.name}
+                          </span>
+                          <span style={{ fontSize: 12, color: "#dde3f0", fontFamily: "monospace" }}>
                             {fmt(c.latest_price)}
-                            <span style={{ marginLeft: 7, fontSize: 11, color: chg >= 0 ? "#10b981" : "#ef4444" }}>
+                            <span style={{ marginLeft: 7, fontSize: 11, color: chg >= 0 ? "#00ff88" : "#ff4444" }}>
                               {chg >= 0 ? "+" : ""}{chg.toFixed(2)}
                             </span>
                           </span>
                         </div>
-
-                        {/* Sparkline */}
                         <div style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 8 }}>
                           <Spark vals={c.hist_vals?.slice(-10) ?? []} color={cc} w={60} h={18} />
-                          {/* YoY bar */}
-                          <div style={{ flex: 1, height: 3, borderRadius: 2, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
-                            <div style={{
-                              height: "100%", borderRadius: 2,
-                              width: `${barW}%`,
-                              background: chg >= 0 ? "#10b981" : "#ef4444",
-                              transition: "width 0.3s"
-                            }} />
+                          <div style={{ flex: 1, height: 3, borderRadius: 2, background: "#1e2a3a", overflow: "hidden" }}>
+                            <div style={{ height: "100%", borderRadius: 2, width: `${barW}%`, background: chg >= 0 ? "#00ff88" : "#ff4444", transition: "width 0.3s" }} />
                           </div>
-                          <span style={{ fontSize: 9, color: "rgba(255,255,255,0.28)", minWidth: 34, textAlign: "right" }}>
+                          <span style={{ fontSize: 9, color: "#6a7a8a", minWidth: 34, textAlign: "right" }}>
                             {chg >= 0 ? "+" : ""}{chg.toFixed(1)}%
                           </span>
                         </div>
@@ -582,27 +512,24 @@ export default function PriceForecast() {
             }
           </div>
 
-          {/* Signal footer */}
           <div style={{
-            marginTop: 12, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.07)",
+            marginTop: 12, paddingTop: 12, borderTop: "1px solid #1e2a3a",
             display: "flex", justifyContent: "space-between", alignItems: "center"
           }}>
             <div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.28)", letterSpacing: "0.5px" }}>
+              <div style={{ fontSize: 9, color: "#6a7a8a", letterSpacing: "0.2em", fontFamily: "monospace" }}>
                 ML SIGNAL · {selected?.toUpperCase() ?? "—"}
               </div>
               <div style={{ fontSize: 16, fontWeight: 700, color: signalColor, marginTop: 3, letterSpacing: "-0.3px" }}>
                 {loadingFore ? <Skeleton h={16} w={60} /> : <>
                   {signal}
-                  <span style={{ fontSize: 10, color: "rgba(255,255,255,0.32)", fontWeight: 400, marginLeft: 8 }}>
-                    {pct(ret)} in {horizon}Y
-                  </span>
+                  <span style={{ fontSize: 10, color: "#8a9ab0", fontWeight: 400, marginLeft: 8 }}>{pct(ret)} in {horizon}Y</span>
                 </>}
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.28)", letterSpacing: "0.5px" }}>MAPE</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>
+              <div style={{ fontSize: 9, color: "#6a7a8a", letterSpacing: "0.2em", fontFamily: "monospace" }}>MAPE</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: "#8a9ab0", marginTop: 2 }}>
                 {loadingFore ? "—" : `${mape}%`}
               </div>
             </div>
@@ -613,26 +540,26 @@ export default function PriceForecast() {
       {/* ── Footer bar ── */}
       <div style={{
         marginTop: 12, display: "flex", alignItems: "center", gap: 16,
-        padding: "10px 14px", background: "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.06)", borderRadius: 6
+        padding: "10px 14px", background: "#0f1825",
+        border: "1px solid #1e2a3a", borderRadius: 6
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <div style={{
             width: 8, height: 8, borderRadius: "50%",
-            background: loadingFore ? "#f59e0b" : "#10b981",
-            boxShadow: `0 0 6px ${loadingFore ? "#f59e0b" : "#10b981"}`,
+            background: loadingFore ? "#f59e0b" : "#00ff88",
+            boxShadow: `0 0 6px ${loadingFore ? "#f59e0b" : "#00ff88"}`,
             animation: loadingFore ? "blink 1s infinite" : "none"
           }} />
-          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", letterSpacing: "0.5px" }}>
+          <span style={{ fontSize: 10, color: "#8a9ab0", letterSpacing: "0.2em", fontFamily: "monospace" }}>
             {loadingFore ? "TRAINING MODELS..." : "ML ENGINE"}
           </span>
         </div>
-        <span style={{ fontSize: 10, color: "rgba(255,255,255,0.22)" }}>
+        <span style={{ fontSize: 10, color: "#6a7a8a" }}>
           {loadingFore
             ? `Fitting Linear Trend, Exp. Smoothing, Moving Avg. on ${selected} data...`
             : `${activeModel} model active · ${horizon}Y horizon · ${filtered.length} commodities · trained on synthetic data`}
         </span>
-        <span style={{ marginLeft: "auto", fontSize: 10, color: "rgba(255,255,255,0.18)" }}>
+        <span style={{ marginLeft: "auto", fontSize: 10, color: "#4a5a6a" }}>
           Source: Synthetic commodity prices · Feb 2026 · Not financial advice
         </span>
       </div>

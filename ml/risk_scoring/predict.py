@@ -1,25 +1,3 @@
-"""
-ml/risk_scoring/predict.py
----------------------------
-Loads trained model artifacts and exposes a clean predict() interface.
-Used by the FastAPI backend service — no training code here, just inference.
-
-Usage:
-    from ml.risk_scoring.predict import RiskScorer
-
-    scorer = RiskScorer()                           # loads best model by default
-    result = scorer.predict_one({
-        "supplier_reliability": 0.75,
-        "transport_delay_days": 5,
-        "geo_political_risk": 0.6,
-        "weather_risk": 0.3,
-        "inventory_level": 200,
-        "currency_volatility": 0.05,
-    })
-    print(result)
-    # {'risk_score': 0.423, 'risk_tier': 'MEDIUM', 'model_used': 'gradient_boosting', ...}
-"""
-
 import json
 import pickle
 from pathlib import Path
