@@ -5,7 +5,6 @@ import RightPanel from "../components/RightPanel";
 import FXMonitor from "../components/FXMonitor";
 import PriceForecast from "../components/PriceForecast";
 import DealDetailPanel from "../components/DealDetailPanel";
-
 const TABS = ["Deal Table", "Risk Analytics", "FX Monitor", "Price Forecast", "Documents"];
 
 const INITIAL_DEALS = [
@@ -20,7 +19,7 @@ const INITIAL_DEALS = [
 ];
 
 const DOC_TYPES = [
-  { key: "invoice",    label: "Commercial Invoice",    icon: "📄", color: "#00e5ff" },
+  { key: "invoice",label: "Commercial Invoice",    icon: "📄", color: "#00e5ff" },
   { key: "bl",         label: "Bill of Lading",        icon: "🚢", color: "#a78bfa" },
   { key: "packing",    label: "Packing List",          icon: "📦", color: "#fb923c" },
   { key: "insurance",  label: "Insurance Certificate", icon: "🛡️", color: "#4ade80" },
