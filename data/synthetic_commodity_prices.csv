@@ -1,0 +1,526 @@
+commodity,category,unit,year,price
+Crude Oil,Energy,$/bbl,1990,83.7281
+Crude Oil,Energy,$/bbl,1991,97.8513
+Crude Oil,Energy,$/bbl,1992,101.9273
+Crude Oil,Energy,$/bbl,1993,105.3531
+Crude Oil,Energy,$/bbl,1994,105.1401
+Crude Oil,Energy,$/bbl,1995,103.3965
+Crude Oil,Energy,$/bbl,1996,123.2137
+Crude Oil,Energy,$/bbl,1997,104.5416
+Crude Oil,Energy,$/bbl,1998,93.7375
+Crude Oil,Energy,$/bbl,1999,90.0085
+Crude Oil,Energy,$/bbl,2000,104.5905
+Crude Oil,Energy,$/bbl,2001,103.4627
+Crude Oil,Energy,$/bbl,2002,97.6521
+Crude Oil,Energy,$/bbl,2003,90.7687
+Crude Oil,Energy,$/bbl,2004,96.0238
+Crude Oil,Energy,$/bbl,2005,97.4601
+Crude Oil,Energy,$/bbl,2006,85.6448
+Crude Oil,Energy,$/bbl,2007,103.9226
+Crude Oil,Energy,$/bbl,2008,109.404
+Crude Oil,Energy,$/bbl,2009,114.5788
+Crude Oil,Energy,$/bbl,2010,122.8315
+Crude Oil,Energy,$/bbl,2011,140.7095
+Crude Oil,Energy,$/bbl,2012,151.135
+Crude Oil,Energy,$/bbl,2013,135.7026
+Crude Oil,Energy,$/bbl,2014,117.8428
+Crude Oil,Energy,$/bbl,2015,109.7809
+Crude Oil,Energy,$/bbl,2016,99.7869
+Crude Oil,Energy,$/bbl,2017,92.9515
+Crude Oil,Energy,$/bbl,2018,95.351
+Crude Oil,Energy,$/bbl,2019,78.7522
+Crude Oil,Energy,$/bbl,2020,65.615
+Crude Oil,Energy,$/bbl,2021,48.5946
+Crude Oil,Energy,$/bbl,2022,47.6499
+Crude Oil,Energy,$/bbl,2023,44.6248
+Crude Oil,Energy,$/bbl,2024,37.2034
+Coal,Energy,$/mt,1990,107.26
+Coal,Energy,$/mt,1991,99.0309
+Coal,Energy,$/mt,1992,108.7539
+Coal,Energy,$/mt,1993,101.6231
+Coal,Energy,$/mt,1994,80.8664
+Coal,Energy,$/mt,1995,80.6039
+Coal,Energy,$/mt,1996,92.0347
+Coal,Energy,$/mt,1997,101.8314
+Coal,Energy,$/mt,1998,107.3052
+Coal,Energy,$/mt,1999,151.8655
+Coal,Energy,$/mt,2000,169.7281
+Coal,Energy,$/mt,2001,204.1324
+Coal,Energy,$/mt,2002,284.1679
+Coal,Energy,$/mt,2003,244.6529
+Coal,Energy,$/mt,2004,220.0244
+Coal,Energy,$/mt,2005,289.9328
+Coal,Energy,$/mt,2006,271.2409
+Coal,Energy,$/mt,2007,287.5143
+Coal,Energy,$/mt,2008,349.7102
+Coal,Energy,$/mt,2009,415.9684
+Coal,Energy,$/mt,2010,548.8331
+Coal,Energy,$/mt,2011,702.7417
+Coal,Energy,$/mt,2012,854.769
+Coal,Energy,$/mt,2013,802.9209
+Coal,Energy,$/mt,2014,943.4756
+Coal,Energy,$/mt,2015,1040.4546
+Coal,Energy,$/mt,2016,890.7392
+Coal,Energy,$/mt,2017,1130.0347
+Coal,Energy,$/mt,2018,1329.9546
+Coal,Energy,$/mt,2019,1412.9079
+Coal,Energy,$/mt,2020,1441.849
+Coal,Energy,$/mt,2021,1262.1189
+Coal,Energy,$/mt,2022,1370.0738
+Coal,Energy,$/mt,2023,1542.663
+Coal,Energy,$/mt,2024,1435.5316
+Natural Gas,Energy,$/mmbtu,1990,38.5926
+Natural Gas,Energy,$/mmbtu,1991,44.2756
+Natural Gas,Energy,$/mmbtu,1992,44.547
+Natural Gas,Energy,$/mmbtu,1993,43.0959
+Natural Gas,Energy,$/mmbtu,1994,51.634
+Natural Gas,Energy,$/mmbtu,1995,52.9052
+Natural Gas,Energy,$/mmbtu,1996,53.4475
+Natural Gas,Energy,$/mmbtu,1997,68.9526
+Natural Gas,Energy,$/mmbtu,1998,62.665
+Natural Gas,Energy,$/mmbtu,1999,70.0379
+Natural Gas,Energy,$/mmbtu,2000,88.7556
+Natural Gas,Energy,$/mmbtu,2001,79.9439
+Natural Gas,Energy,$/mmbtu,2002,88.685
+Natural Gas,Energy,$/mmbtu,2003,71.4654
+Natural Gas,Energy,$/mmbtu,2004,67.5915
+Natural Gas,Energy,$/mmbtu,2005,71.9369
+Natural Gas,Energy,$/mmbtu,2006,49.6626
+Natural Gas,Energy,$/mmbtu,2007,45.6095
+Natural Gas,Energy,$/mmbtu,2008,49.4778
+Natural Gas,Energy,$/mmbtu,2009,48.1425
+Natural Gas,Energy,$/mmbtu,2010,43.6214
+Natural Gas,Energy,$/mmbtu,2011,51.7532
+Natural Gas,Energy,$/mmbtu,2012,57.2283
+Natural Gas,Energy,$/mmbtu,2013,69.7575
+Natural Gas,Energy,$/mmbtu,2014,74.148
+Natural Gas,Energy,$/mmbtu,2015,58.2853
+Natural Gas,Energy,$/mmbtu,2016,51.213
+Natural Gas,Energy,$/mmbtu,2017,44.3801
+Natural Gas,Energy,$/mmbtu,2018,42.6305
+Natural Gas,Energy,$/mmbtu,2019,40.7735
+Natural Gas,Energy,$/mmbtu,2020,48.7795
+Natural Gas,Energy,$/mmbtu,2021,67.3646
+Natural Gas,Energy,$/mmbtu,2022,85.2701
+Natural Gas,Energy,$/mmbtu,2023,86.4557
+Natural Gas,Energy,$/mmbtu,2024,89.5929
+Copper,Metals,$/lb,1990,118.6073
+Copper,Metals,$/lb,1991,126.7747
+Copper,Metals,$/lb,1992,111.816
+Copper,Metals,$/lb,1993,122.0395
+Copper,Metals,$/lb,1994,110.5054
+Copper,Metals,$/lb,1995,111.9733
+Copper,Metals,$/lb,1996,130.5814
+Copper,Metals,$/lb,1997,128.6403
+Copper,Metals,$/lb,1998,141.2863
+Copper,Metals,$/lb,1999,161.7898
+Copper,Metals,$/lb,2000,174.3997
+Copper,Metals,$/lb,2001,161.6595
+Copper,Metals,$/lb,2002,165.2155
+Copper,Metals,$/lb,2003,203.5069
+Copper,Metals,$/lb,2004,176.4569
+Copper,Metals,$/lb,2005,181.254
+Copper,Metals,$/lb,2006,181.5973
+Copper,Metals,$/lb,2007,193.125
+Copper,Metals,$/lb,2008,216.4756
+Copper,Metals,$/lb,2009,259.6984
+Copper,Metals,$/lb,2010,266.8905
+Copper,Metals,$/lb,2011,300.7265
+Copper,Metals,$/lb,2012,330.2479
+Copper,Metals,$/lb,2013,361.8999
+Copper,Metals,$/lb,2014,362.1941
+Copper,Metals,$/lb,2015,348.1211
+Copper,Metals,$/lb,2016,331.322
+Copper,Metals,$/lb,2017,325.7534
+Copper,Metals,$/lb,2018,352.423
+Copper,Metals,$/lb,2019,395.445
+Copper,Metals,$/lb,2020,427.8847
+Copper,Metals,$/lb,2021,428.8188
+Copper,Metals,$/lb,2022,522.1824
+Copper,Metals,$/lb,2023,622.1515
+Copper,Metals,$/lb,2024,634.6111
+Aluminum,Metals,$/mt,1990,68.0942
+Aluminum,Metals,$/mt,1991,61.0821
+Aluminum,Metals,$/mt,1992,70.8709
+Aluminum,Metals,$/mt,1993,71.0495
+Aluminum,Metals,$/mt,1994,72.0167
+Aluminum,Metals,$/mt,1995,89.5465
+Aluminum,Metals,$/mt,1996,95.1271
+Aluminum,Metals,$/mt,1997,89.3216
+Aluminum,Metals,$/mt,1998,72.7923
+Aluminum,Metals,$/mt,1999,91.4852
+Aluminum,Metals,$/mt,2000,60.2257
+Aluminum,Metals,$/mt,2001,57.0163
+Aluminum,Metals,$/mt,2002,53.3722
+Aluminum,Metals,$/mt,2003,51.4253
+Aluminum,Metals,$/mt,2004,62.3959
+Aluminum,Metals,$/mt,2005,69.2723
+Aluminum,Metals,$/mt,2006,69.3786
+Aluminum,Metals,$/mt,2007,52.8252
+Aluminum,Metals,$/mt,2008,55.4565
+Aluminum,Metals,$/mt,2009,47.2351
+Aluminum,Metals,$/mt,2010,58.0893
+Aluminum,Metals,$/mt,2011,57.0556
+Aluminum,Metals,$/mt,2012,56.3957
+Aluminum,Metals,$/mt,2013,52.7394
+Aluminum,Metals,$/mt,2014,52.8338
+Aluminum,Metals,$/mt,2015,50.5072
+Aluminum,Metals,$/mt,2016,63.9107
+Aluminum,Metals,$/mt,2017,64.3118
+Aluminum,Metals,$/mt,2018,52.3459
+Aluminum,Metals,$/mt,2019,53.344
+Aluminum,Metals,$/mt,2020,47.7761
+Aluminum,Metals,$/mt,2021,39.9277
+Aluminum,Metals,$/mt,2022,40.5202
+Aluminum,Metals,$/mt,2023,46.9024
+Aluminum,Metals,$/mt,2024,56.2109
+Zinc,Metals,$/mt,1990,6.3671
+Zinc,Metals,$/mt,1991,8.0092
+Zinc,Metals,$/mt,1992,7.9147
+Zinc,Metals,$/mt,1993,7.5905
+Zinc,Metals,$/mt,1994,4.9358
+Zinc,Metals,$/mt,1995,4.7333
+Zinc,Metals,$/mt,1996,4.2269
+Zinc,Metals,$/mt,1997,4.1797
+Zinc,Metals,$/mt,1998,4.6127
+Zinc,Metals,$/mt,1999,4.9385
+Zinc,Metals,$/mt,2000,5.13
+Zinc,Metals,$/mt,2001,5.5099
+Zinc,Metals,$/mt,2002,5.6422
+Zinc,Metals,$/mt,2003,6.0578
+Zinc,Metals,$/mt,2004,3.3114
+Zinc,Metals,$/mt,2005,3.318
+Zinc,Metals,$/mt,2006,3.4054
+Zinc,Metals,$/mt,2007,3.3744
+Zinc,Metals,$/mt,2008,3.4078
+Zinc,Metals,$/mt,2009,3.9241
+Zinc,Metals,$/mt,2010,3.7335
+Zinc,Metals,$/mt,2011,5.1587
+Zinc,Metals,$/mt,2012,5.9284
+Zinc,Metals,$/mt,2013,6.1798
+Zinc,Metals,$/mt,2014,6.2516
+Zinc,Metals,$/mt,2015,6.4396
+Zinc,Metals,$/mt,2016,5.8128
+Zinc,Metals,$/mt,2017,5.9799
+Zinc,Metals,$/mt,2018,6.4955
+Zinc,Metals,$/mt,2019,7.3561
+Zinc,Metals,$/mt,2020,8.3308
+Zinc,Metals,$/mt,2021,8.3402
+Zinc,Metals,$/mt,2022,6.8863
+Zinc,Metals,$/mt,2023,6.4766
+Zinc,Metals,$/mt,2024,8.3629
+Gold,Metals,$/oz,1990,23.3253
+Gold,Metals,$/oz,1991,24.7294
+Gold,Metals,$/oz,1992,18.3657
+Gold,Metals,$/oz,1993,17.3304
+Gold,Metals,$/oz,1994,14.1917
+Gold,Metals,$/oz,1995,14.3423
+Gold,Metals,$/oz,1996,14.6791
+Gold,Metals,$/oz,1997,13.5115
+Gold,Metals,$/oz,1998,11.8045
+Gold,Metals,$/oz,1999,9.524
+Gold,Metals,$/oz,2000,11.5373
+Gold,Metals,$/oz,2001,13.352
+Gold,Metals,$/oz,2002,8.8333
+Gold,Metals,$/oz,2003,9.8631
+Gold,Metals,$/oz,2004,8.4043
+Gold,Metals,$/oz,2005,10.2612
+Gold,Metals,$/oz,2006,8.2213
+Gold,Metals,$/oz,2007,9.2725
+Gold,Metals,$/oz,2008,10.9601
+Gold,Metals,$/oz,2009,11.4256
+Gold,Metals,$/oz,2010,13.1961
+Gold,Metals,$/oz,2011,13.1431
+Gold,Metals,$/oz,2012,15.9872
+Gold,Metals,$/oz,2013,16.2409
+Gold,Metals,$/oz,2014,17.3077
+Gold,Metals,$/oz,2015,18.0685
+Gold,Metals,$/oz,2016,18.7384
+Gold,Metals,$/oz,2017,18.7189
+Gold,Metals,$/oz,2018,22.8014
+Gold,Metals,$/oz,2019,33.7365
+Gold,Metals,$/oz,2020,44.03
+Gold,Metals,$/oz,2021,49.5911
+Gold,Metals,$/oz,2022,39.4351
+Gold,Metals,$/oz,2023,32.6663
+Gold,Metals,$/oz,2024,40.5102
+Wheat,Agriculture,$/mt,1990,50.5259
+Wheat,Agriculture,$/mt,1991,58.4045
+Wheat,Agriculture,$/mt,1992,60.9458
+Wheat,Agriculture,$/mt,1993,62.3632
+Wheat,Agriculture,$/mt,1994,107.0073
+Wheat,Agriculture,$/mt,1995,108.5907
+Wheat,Agriculture,$/mt,1996,106.2659
+Wheat,Agriculture,$/mt,1997,104.9405
+Wheat,Agriculture,$/mt,1998,92.1649
+Wheat,Agriculture,$/mt,1999,115.2415
+Wheat,Agriculture,$/mt,2000,107.4736
+Wheat,Agriculture,$/mt,2001,125.3818
+Wheat,Agriculture,$/mt,2002,135.8571
+Wheat,Agriculture,$/mt,2003,177.2256
+Wheat,Agriculture,$/mt,2004,197.7142
+Wheat,Agriculture,$/mt,2005,144.1965
+Wheat,Agriculture,$/mt,2006,101.3085
+Wheat,Agriculture,$/mt,2007,136.6939
+Wheat,Agriculture,$/mt,2008,119.2388
+Wheat,Agriculture,$/mt,2009,83.9398
+Wheat,Agriculture,$/mt,2010,72.0122
+Wheat,Agriculture,$/mt,2011,94.7171
+Wheat,Agriculture,$/mt,2012,64.4464
+Wheat,Agriculture,$/mt,2013,52.2884
+Wheat,Agriculture,$/mt,2014,44.8931
+Wheat,Agriculture,$/mt,2015,32.34
+Wheat,Agriculture,$/mt,2016,23.8084
+Wheat,Agriculture,$/mt,2017,15.6483
+Wheat,Agriculture,$/mt,2018,14.196
+Wheat,Agriculture,$/mt,2019,13.2352
+Wheat,Agriculture,$/mt,2020,11.3141
+Wheat,Agriculture,$/mt,2021,7.0735
+Wheat,Agriculture,$/mt,2022,9.2849
+Wheat,Agriculture,$/mt,2023,6.5176
+Wheat,Agriculture,$/mt,2024,7.052
+Corn,Agriculture,$/mt,1990,81.3903
+Corn,Agriculture,$/mt,1991,84.6084
+Corn,Agriculture,$/mt,1992,98.8587
+Corn,Agriculture,$/mt,1993,104.0387
+Corn,Agriculture,$/mt,1994,81.7042
+Corn,Agriculture,$/mt,1995,86.2455
+Corn,Agriculture,$/mt,1996,88.3759
+Corn,Agriculture,$/mt,1997,74.4933
+Corn,Agriculture,$/mt,1998,77.759
+Corn,Agriculture,$/mt,1999,84.237
+Corn,Agriculture,$/mt,2000,90.4437
+Corn,Agriculture,$/mt,2001,95.238
+Corn,Agriculture,$/mt,2002,90.0115
+Corn,Agriculture,$/mt,2003,104.0405
+Corn,Agriculture,$/mt,2004,101.685
+Corn,Agriculture,$/mt,2005,93.4568
+Corn,Agriculture,$/mt,2006,81.7451
+Corn,Agriculture,$/mt,2007,82.6549
+Corn,Agriculture,$/mt,2008,85.7274
+Corn,Agriculture,$/mt,2009,92.0832
+Corn,Agriculture,$/mt,2010,102.0868
+Corn,Agriculture,$/mt,2011,100.2708
+Corn,Agriculture,$/mt,2012,84.7911
+Corn,Agriculture,$/mt,2013,89.7211
+Corn,Agriculture,$/mt,2014,99.1187
+Corn,Agriculture,$/mt,2015,103.7653
+Corn,Agriculture,$/mt,2016,101.7031
+Corn,Agriculture,$/mt,2017,82.507
+Corn,Agriculture,$/mt,2018,81.6911
+Corn,Agriculture,$/mt,2019,71.1296
+Corn,Agriculture,$/mt,2020,66.5919
+Corn,Agriculture,$/mt,2021,56.4982
+Corn,Agriculture,$/mt,2022,53.9925
+Corn,Agriculture,$/mt,2023,52.9839
+Corn,Agriculture,$/mt,2024,59.5078
+Coffee,Agriculture,¢/lb,1990,238.2456
+Coffee,Agriculture,¢/lb,1991,247.3523
+Coffee,Agriculture,¢/lb,1992,313.0379
+Coffee,Agriculture,¢/lb,1993,311.8124
+Coffee,Agriculture,¢/lb,1994,326.6511
+Coffee,Agriculture,¢/lb,1995,340.7022
+Coffee,Agriculture,¢/lb,1996,348.4467
+Coffee,Agriculture,¢/lb,1997,373.0843
+Coffee,Agriculture,¢/lb,1998,416.2577
+Coffee,Agriculture,¢/lb,1999,501.9605
+Coffee,Agriculture,¢/lb,2000,440.4748
+Coffee,Agriculture,¢/lb,2001,439.1661
+Coffee,Agriculture,¢/lb,2002,440.9628
+Coffee,Agriculture,¢/lb,2003,511.7315
+Coffee,Agriculture,¢/lb,2004,519.0875
+Coffee,Agriculture,¢/lb,2005,436.4084
+Coffee,Agriculture,¢/lb,2006,464.5714
+Coffee,Agriculture,¢/lb,2007,488.185
+Coffee,Agriculture,¢/lb,2008,524.7598
+Coffee,Agriculture,¢/lb,2009,491.8195
+Coffee,Agriculture,¢/lb,2010,614.115
+Coffee,Agriculture,¢/lb,2011,625.2165
+Coffee,Agriculture,¢/lb,2012,646.0851
+Coffee,Agriculture,¢/lb,2013,615.7495
+Coffee,Agriculture,¢/lb,2014,584.6843
+Coffee,Agriculture,¢/lb,2015,535.9337
+Coffee,Agriculture,¢/lb,2016,541.4207
+Coffee,Agriculture,¢/lb,2017,512.4811
+Coffee,Agriculture,¢/lb,2018,659.4327
+Coffee,Agriculture,¢/lb,2019,554.8973
+Coffee,Agriculture,¢/lb,2020,514.5431
+Coffee,Agriculture,¢/lb,2021,519.3405
+Coffee,Agriculture,¢/lb,2022,587.1915
+Coffee,Agriculture,¢/lb,2023,591.8482
+Coffee,Agriculture,¢/lb,2024,669.3374
+Cotton,Agriculture,¢/lb,1990,428.3203
+Cotton,Agriculture,¢/lb,1991,414.4326
+Cotton,Agriculture,¢/lb,1992,442.7255
+Cotton,Agriculture,¢/lb,1993,451.5048
+Cotton,Agriculture,¢/lb,1994,451.5391
+Cotton,Agriculture,¢/lb,1995,444.5416
+Cotton,Agriculture,¢/lb,1996,463.9324
+Cotton,Agriculture,¢/lb,1997,482.5734
+Cotton,Agriculture,¢/lb,1998,404.7813
+Cotton,Agriculture,¢/lb,1999,411.0453
+Cotton,Agriculture,¢/lb,2000,432.347
+Cotton,Agriculture,¢/lb,2001,449.4561
+Cotton,Agriculture,¢/lb,2002,422.1658
+Cotton,Agriculture,¢/lb,2003,413.616
+Cotton,Agriculture,¢/lb,2004,404.8957
+Cotton,Agriculture,¢/lb,2005,361.979
+Cotton,Agriculture,¢/lb,2006,372.6891
+Cotton,Agriculture,¢/lb,2007,343.5473
+Cotton,Agriculture,¢/lb,2008,370.9602
+Cotton,Agriculture,¢/lb,2009,369.7329
+Cotton,Agriculture,¢/lb,2010,356.2883
+Cotton,Agriculture,¢/lb,2011,346.7642
+Cotton,Agriculture,¢/lb,2012,339.3277
+Cotton,Agriculture,¢/lb,2013,365.7975
+Cotton,Agriculture,¢/lb,2014,382.5169
+Cotton,Agriculture,¢/lb,2015,368.906
+Cotton,Agriculture,¢/lb,2016,368.3116
+Cotton,Agriculture,¢/lb,2017,353.3006
+Cotton,Agriculture,¢/lb,2018,305.5126
+Cotton,Agriculture,¢/lb,2019,320.5059
+Cotton,Agriculture,¢/lb,2020,303.6314
+Cotton,Agriculture,¢/lb,2021,306.3952
+Cotton,Agriculture,¢/lb,2022,282.4121
+Cotton,Agriculture,¢/lb,2023,276.2053
+Cotton,Agriculture,¢/lb,2024,287.7697
+Sugar,Agriculture,$/lb,1990,89.4815
+Sugar,Agriculture,$/lb,1991,89.1159
+Sugar,Agriculture,$/lb,1992,100.0334
+Sugar,Agriculture,$/lb,1993,77.234
+Sugar,Agriculture,$/lb,1994,70.3981
+Sugar,Agriculture,$/lb,1995,70.5138
+Sugar,Agriculture,$/lb,1996,78.0045
+Sugar,Agriculture,$/lb,1997,81.6092
+Sugar,Agriculture,$/lb,1998,84.7785
+Sugar,Agriculture,$/lb,1999,82.0835
+Sugar,Agriculture,$/lb,2000,86.9206
+Sugar,Agriculture,$/lb,2001,97.9877
+Sugar,Agriculture,$/lb,2002,76.1843
+Sugar,Agriculture,$/lb,2003,83.0877
+Sugar,Agriculture,$/lb,2004,81.7865
+Sugar,Agriculture,$/lb,2005,75.9751
+Sugar,Agriculture,$/lb,2006,51.9052
+Sugar,Agriculture,$/lb,2007,42.547
+Sugar,Agriculture,$/lb,2008,51.7014
+Sugar,Agriculture,$/lb,2009,46.9746
+Sugar,Agriculture,$/lb,2010,40.289
+Sugar,Agriculture,$/lb,2011,37.8069
+Sugar,Agriculture,$/lb,2012,34.0755
+Sugar,Agriculture,$/lb,2013,34.5186
+Sugar,Agriculture,$/lb,2014,41.1426
+Sugar,Agriculture,$/lb,2015,37.9199
+Sugar,Agriculture,$/lb,2016,38.5587
+Sugar,Agriculture,$/lb,2017,32.7615
+Sugar,Agriculture,$/lb,2018,39.0618
+Sugar,Agriculture,$/lb,2019,39.8943
+Sugar,Agriculture,$/lb,2020,34.2315
+Sugar,Agriculture,$/lb,2021,38.1063
+Sugar,Agriculture,$/lb,2022,43.8671
+Sugar,Agriculture,$/lb,2023,44.6465
+Sugar,Agriculture,$/lb,2024,35.1113
+Steel,Industrial,$/mt,1990,64.7508
+Steel,Industrial,$/mt,1991,71.2754
+Steel,Industrial,$/mt,1992,84.4578
+Steel,Industrial,$/mt,1993,88.176
+Steel,Industrial,$/mt,1994,85.6187
+Steel,Industrial,$/mt,1995,90.9369
+Steel,Industrial,$/mt,1996,106.3973
+Steel,Industrial,$/mt,1997,110.9169
+Steel,Industrial,$/mt,1998,97.267
+Steel,Industrial,$/mt,1999,95.7179
+Steel,Industrial,$/mt,2000,102.6527
+Steel,Industrial,$/mt,2001,101.2177
+Steel,Industrial,$/mt,2002,109.9515
+Steel,Industrial,$/mt,2003,83.2825
+Steel,Industrial,$/mt,2004,93.3449
+Steel,Industrial,$/mt,2005,105.295
+Steel,Industrial,$/mt,2006,92.9478
+Steel,Industrial,$/mt,2007,108.4516
+Steel,Industrial,$/mt,2008,113.5082
+Steel,Industrial,$/mt,2009,110.3425
+Steel,Industrial,$/mt,2010,114.7839
+Steel,Industrial,$/mt,2011,124.0245
+Steel,Industrial,$/mt,2012,122.2023
+Steel,Industrial,$/mt,2013,83.5394
+Steel,Industrial,$/mt,2014,82.5795
+Steel,Industrial,$/mt,2015,73.9968
+Steel,Industrial,$/mt,2016,67.9503
+Steel,Industrial,$/mt,2017,69.9076
+Steel,Industrial,$/mt,2018,76.6675
+Steel,Industrial,$/mt,2019,82.5003
+Steel,Industrial,$/mt,2020,93.8635
+Steel,Industrial,$/mt,2021,98.0273
+Steel,Industrial,$/mt,2022,103.2737
+Steel,Industrial,$/mt,2023,114.9762
+Steel,Industrial,$/mt,2024,130.7126
+Fertilizer,Industrial,$/mt,1990,72.8246
+Fertilizer,Industrial,$/mt,1991,75.8346
+Fertilizer,Industrial,$/mt,1992,70.1473
+Fertilizer,Industrial,$/mt,1993,63.8336
+Fertilizer,Industrial,$/mt,1994,75.479
+Fertilizer,Industrial,$/mt,1995,42.7513
+Fertilizer,Industrial,$/mt,1996,33.5558
+Fertilizer,Industrial,$/mt,1997,28.5672
+Fertilizer,Industrial,$/mt,1998,28.269
+Fertilizer,Industrial,$/mt,1999,14.9579
+Fertilizer,Industrial,$/mt,2000,19.1537
+Fertilizer,Industrial,$/mt,2001,22.0902
+Fertilizer,Industrial,$/mt,2002,31.3838
+Fertilizer,Industrial,$/mt,2003,38.9961
+Fertilizer,Industrial,$/mt,2004,48.215
+Fertilizer,Industrial,$/mt,2005,70.9776
+Fertilizer,Industrial,$/mt,2006,65.8039
+Fertilizer,Industrial,$/mt,2007,49.1552
+Fertilizer,Industrial,$/mt,2008,48.7869
+Fertilizer,Industrial,$/mt,2009,42.8369
+Fertilizer,Industrial,$/mt,2010,42.3134
+Fertilizer,Industrial,$/mt,2011,35.3121
+Fertilizer,Industrial,$/mt,2012,40.5057
+Fertilizer,Industrial,$/mt,2013,46.0335
+Fertilizer,Industrial,$/mt,2014,47.5152
+Fertilizer,Industrial,$/mt,2015,52.1513
+Fertilizer,Industrial,$/mt,2016,52.6703
+Fertilizer,Industrial,$/mt,2017,62.2902
+Fertilizer,Industrial,$/mt,2018,65.457
+Fertilizer,Industrial,$/mt,2019,64.5483
+Fertilizer,Industrial,$/mt,2020,78.5512
+Fertilizer,Industrial,$/mt,2021,100.6175
+Fertilizer,Industrial,$/mt,2022,130.3719
+Fertilizer,Industrial,$/mt,2023,110.3099
+Fertilizer,Industrial,$/mt,2024,103.047
+Rubber,Industrial,$/mt,1990,56.2838
+Rubber,Industrial,$/mt,1991,55.9903
+Rubber,Industrial,$/mt,1992,60.1572
+Rubber,Industrial,$/mt,1993,52.1139
+Rubber,Industrial,$/mt,1994,60.0983
+Rubber,Industrial,$/mt,1995,59.2721
+Rubber,Industrial,$/mt,1996,59.5556
+Rubber,Industrial,$/mt,1997,64.4367
+Rubber,Industrial,$/mt,1998,59.7564
+Rubber,Industrial,$/mt,1999,58.8907
+Rubber,Industrial,$/mt,2000,66.4259
+Rubber,Industrial,$/mt,2001,55.4187
+Rubber,Industrial,$/mt,2002,49.9726
+Rubber,Industrial,$/mt,2003,47.3137
+Rubber,Industrial,$/mt,2004,44.4259
+Rubber,Industrial,$/mt,2005,50.9472
+Rubber,Industrial,$/mt,2006,55.365
+Rubber,Industrial,$/mt,2007,52.5003
+Rubber,Industrial,$/mt,2008,55.1114
+Rubber,Industrial,$/mt,2009,66.1555
+Rubber,Industrial,$/mt,2010,79.6837
+Rubber,Industrial,$/mt,2011,80.4876
+Rubber,Industrial,$/mt,2012,82.7266
+Rubber,Industrial,$/mt,2013,88.5313
+Rubber,Industrial,$/mt,2014,116.2959
+Rubber,Industrial,$/mt,2015,111.0837
+Rubber,Industrial,$/mt,2016,114.6257
+Rubber,Industrial,$/mt,2017,86.0644
+Rubber,Industrial,$/mt,2018,85.9874
+Rubber,Industrial,$/mt,2019,98.3272
+Rubber,Industrial,$/mt,2020,92.3494
+Rubber,Industrial,$/mt,2021,107.3491
+Rubber,Industrial,$/mt,2022,99.9213
+Rubber,Industrial,$/mt,2023,114.305
+Rubber,Industrial,$/mt,2024,111.6003
