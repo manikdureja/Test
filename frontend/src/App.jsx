@@ -8,6 +8,7 @@ import Profile from "./components/Profile";
 import Landing from "./Pages/Landing";
 import Login from "./Pages/Login";
 import PriceForecast from "./components/PriceForecast";
+import Documents from "./components/Documents";
 
 export default function App() {
   const [page, setPage] = useState("landing"); 
@@ -47,6 +48,7 @@ export default function App() {
       case "dashboard": return <Dashboard newDeal={latestDeal} isDark={isDark} />;
       case "fx":        return <FXMonitor isDark={isDark} />;
       case "forecast":  return <PriceForecast isDark={isDark} />;
+      case "documents": return <Documents isDark={isDark} />;
       case "profile":   return <Profile user={user} onLogout={handleLogout} isDark={isDark} />;
       default:
         return (
