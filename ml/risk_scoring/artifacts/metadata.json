@@ -15,64 +15,64 @@
   "metrics": [
     {
       "model": "ridge",
-      "RMSE": 0.00012,
-      "MAE": 0.0001,
-      "R2": 1.0,
-      "MAPE_pct": 0.03
+      "RMSE": 0.00119,
+      "MAE": 0.00096,
+      "R2": 0.99984,
+      "MAPE_pct": 0.26
     },
     {
       "model": "random_forest",
-      "RMSE": 0.02766,
-      "MAE": 0.02178,
-      "R2": 0.91025,
-      "MAPE_pct": 5.74
+      "RMSE": 0.03025,
+      "MAE": 0.02372,
+      "R2": 0.8926,
+      "MAPE_pct": 6.24
     },
     {
       "model": "gradient_boosting",
       "RMSE": 0.01685,
-      "MAE": 0.01337,
-      "R2": 0.9667,
-      "MAPE_pct": 3.54
+      "MAE": 0.0134,
+      "R2": 0.96668,
+      "MAPE_pct": 3.59
     }
   ],
   "cv_scores": {
     "ridge": {
-      "mean": 1.0,
+      "mean": 0.9997,
       "std": 0.0
     },
     "random_forest": {
-      "mean": 0.8826,
-      "std": 0.0208
+      "mean": 0.8629,
+      "std": 0.0228
     },
     "gradient_boosting": {
-      "mean": 0.9553,
-      "std": 0.0053
+      "mean": 0.9614,
+      "std": 0.0056
     }
   },
   "feature_importances": {
     "ridge": {
-      "supplier_reliability": 0.15007,
-      "transport_delay_days": 0.24985,
-      "geo_political_risk": 0.24458,
-      "weather_risk": 0.12245,
-      "inventory_level": 0.11038,
-      "currency_volatility": 0.12267
+      "supplier_reliability": 0.14998,
+      "transport_delay_days": 0.24997,
+      "geo_political_risk": 0.2446,
+      "weather_risk": 0.1224,
+      "inventory_level": 0.11036,
+      "currency_volatility": 0.12269
     },
     "random_forest": {
-      "supplier_reliability": 0.1128,
-      "transport_delay_days": 0.3501,
-      "geo_political_risk": 0.34909,
-      "weather_risk": 0.05969,
-      "inventory_level": 0.05447,
-      "currency_volatility": 0.07386
+      "supplier_reliability": 0.10968,
+      "transport_delay_days": 0.35618,
+      "geo_political_risk": 0.3582,
+      "weather_risk": 0.05577,
+      "inventory_level": 0.04985,
+      "currency_volatility": 0.07031
     },
     "gradient_boosting": {
-      "supplier_reliability": 0.11548,
-      "transport_delay_days": 0.3349,
-      "geo_political_risk": 0.32558,
-      "weather_risk": 0.07626,
-      "inventory_level": 0.06436,
-      "currency_volatility": 0.08341
+      "supplier_reliability": 0.12094,
+      "transport_delay_days": 0.33619,
+      "geo_political_risk": 0.32156,
+      "weather_risk": 0.07264,
+      "inventory_level": 0.06426,
+      "currency_volatility": 0.08441
     }
   }
 }

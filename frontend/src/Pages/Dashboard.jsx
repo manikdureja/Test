@@ -38,6 +38,50 @@ const FILE_ICON = (ext) => {
   return { icon: "FILE", color: "#94a3b8" };
 };
 
+const LOCATION_TO_COUNTRY = {
+  mumbai: "India",
+  surat: "India",
+  chennai: "India",
+  delhi: "India",
+  pune: "India",
+  hyderabad: "India",
+  rajkot: "India",
+  "nhava sheva": "India",
+  shenzhen: "China",
+  guangzhou: "China",
+  suzhou: "China",
+  stuttgart: "Germany",
+  dubai: "UAE",
+};
+
+const MONTHS = {
+  jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+  jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11,
+};
+
+const getRiskLevel = (score) => {
+  if (score >= 70) return "High";
+  if (score >= 50) return "Medium";
+  return "Low";
+};
+
+const parseEtaToDate = (eta) => {
+  if (!eta || eta === "TBD") return null;
+  const [rawMon, rawDay] = eta.split(" ");
+  if (!rawMon || !rawDay) return null;
+  const month = MONTHS[rawMon.toLowerCase()];
+  const day = Number(rawDay);
+  if (month === undefined || Number.isNaN(day)) return null;
+  return new Date(new Date().getFullYear(), month, day);
+};
+
+const withinDealWindow = (dealDate, rangeLabel, maxDate) => {
+  if (!dealDate || !maxDate || rangeLabel === "This Year") return true;
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+  const days = rangeLabel === "Last 7 days" ? 7 : rangeLabel === "Last 90 days" ? 90 : 30;
+  return maxDate - dealDate <= days * MS_PER_DAY;
+};
+
 function DocumentsTab({ isDark, deals }) {
   const [docs, setDocs]               = useState([]);
   const [dragOver, setDragOver]       = useState(false);
@@ -208,7 +252,7 @@ function DocumentsTab({ isDark, deals }) {
 }
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
-export default function Dashboard({ isDark, newDeal, initialTab = "Deal Table", dealStatusFilter = null }) {
+export default function Dashboard({ isDark, newDeal, initialTab = "Deal Table", dealStatusFilter = null, currentFilters = {} }) {
   const [tab, setTab]               = useState(initialTab);
   const [deals, setDeals]           = useState(INITIAL_DEALS);
   const [selected, setSelected]     = useState(null);
@@ -268,7 +312,25 @@ export default function Dashboard({ isDark, newDeal, initialTab = "Deal Table", 
   };
 
   const activeDeals    = deals.filter(d => !d.completed);
-  const visibleDeals   = dealStatusFilter ? activeDeals.filter(d => d.status === dealStatusFilter) : activeDeals;
+  const selectedCountry = currentFilters[0] || "All Countries";
+  const selectedProduct = currentFilters[1] || "All Products";
+  const selectedRisk = currentFilters[2] || "All Risk Levels";
+  const selectedWindow = currentFilters[3] || "Last 30 days";
+
+  const etaDates = activeDeals.map(d => parseEtaToDate(d.eta)).filter(Boolean);
+  const latestEta = etaDates.length > 0 ? new Date(Math.max(...etaDates.map(d => d.getTime()))) : null;
+
+  const filteredDeals = activeDeals.filter((deal) => {
+    const originCountry = LOCATION_TO_COUNTRY[deal.origin.toLowerCase()] || "";
+    const destCountry = LOCATION_TO_COUNTRY[deal.destination.toLowerCase()] || "";
+    const countryMatch = selectedCountry === "All Countries" || originCountry === selectedCountry || destCountry === selectedCountry;
+    const productMatch = selectedProduct === "All Products" || deal.product.toLowerCase().includes(selectedProduct.toLowerCase());
+    const riskMatch = selectedRisk === "All Risk Levels" || getRiskLevel(deal.riskScore) === selectedRisk;
+    const timeMatch = withinDealWindow(parseEtaToDate(deal.eta), selectedWindow, latestEta);
+    return countryMatch && productMatch && riskMatch && timeMatch;
+  });
+
+  const visibleDeals   = dealStatusFilter ? filteredDeals.filter(d => d.status === dealStatusFilter) : filteredDeals;
   const completedDeals = deals.filter(d =>  d.completed);
   const totalExposure  = (activeDeals.reduce((s, d) => s + d.value, 0) / 1e6).toFixed(1);
   const avgRisk        = activeDeals.length ? Math.round(activeDeals.reduce((s, d) => s + d.riskScore, 0) / activeDeals.length) : 0;
