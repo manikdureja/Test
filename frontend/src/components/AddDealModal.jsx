@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_URL || "https://test-price-forecasting.onrender.com";
 
 // Status options matching existing app
 const STATUSES = ["PENDING", "ACTIVE", "HIGH", "IN TRANSIT"];
