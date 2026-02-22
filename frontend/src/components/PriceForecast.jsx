@@ -37,8 +37,10 @@ function Spark({ vals, color, w = 72, h = 24 }) {
   );
 }
 
-function ForecastChart({ historical, foreYears, activeModelData, catColor }) {
-  const W = 680, H = 210, PL = 60, PR = 14, PT = 12, PB = 30;
+// Added zoom prop to dynamically scale the internal canvas width
+function ForecastChart({ historical, foreYears, activeModelData, catColor, zoom = 1 }) {
+  // Base width is 680, scaled by the zoom factor
+  const W = 680 * zoom, H = 210, PL = 60, PR = 14, PT = 12, PB = 30;
 
   if (!historical?.length || !activeModelData) return (
     <div style={{ height: H, display: "flex", alignItems: "center", justifyContent: "center", color: "#6a7a8a", fontSize: 12 }}>
@@ -84,55 +86,58 @@ function ForecastChart({ historical, foreYears, activeModelData, catColor }) {
     .filter(({ yr }) => yr % 5 === 0);
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: "block", overflow: "visible" }}>
-      <defs>
-        <linearGradient id="histFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={catColor} stopOpacity="0.13" />
-          <stop offset="100%" stopColor={catColor} stopOpacity="0" />
-        </linearGradient>
-      </defs>
+    // Wrap in overflow container to allow horizontal panning when zoomed
+    <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", paddingBottom: 8 }}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ display: "block", overflow: "visible", width: zoom > 1 ? W : "100%", height: H }}>
+        <defs>
+          <linearGradient id="histFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={catColor} stopOpacity="0.13" />
+            <stop offset="100%" stopColor={catColor} stopOpacity="0" />
+          </linearGradient>
+        </defs>
 
-      {Array.from({ length: yTicks + 1 }, (_, i) => {
-        const val = minV + yStep * i;
-        const y   = yS(val);
-        const lbl = val >= 10000 ? `${(val / 1000).toFixed(0)}k` : val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val >= 10 ? val.toFixed(1) : val.toFixed(3);
-        return (
-          <g key={i}>
-            <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="#1e2a3a" strokeWidth="1" />
-            <text x={PL - 5} y={y + 4} fontSize="9" fill="#6a7a8a" textAnchor="end">{lbl}</text>
-          </g>
-        );
-      })}
+        {Array.from({ length: yTicks + 1 }, (_, i) => {
+          const val = minV + yStep * i;
+          const y   = yS(val);
+          const lbl = val >= 10000 ? `${(val / 1000).toFixed(0)}k` : val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val >= 10 ? val.toFixed(1) : val.toFixed(3);
+          return (
+            <g key={i}>
+              <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="#1e2a3a" strokeWidth="1" />
+              <text x={PL - 5} y={y + 4} fontSize="9" fill="#6a7a8a" textAnchor="end">{lbl}</text>
+            </g>
+          );
+        })}
 
-      {xLabels.map(({ yr, i }) => (
-        <text key={yr} x={xS(i)} y={H - PB + 14} fontSize="9" fill="#6a7a8a" textAnchor="middle">{yr}</text>
-      ))}
+        {xLabels.map(({ yr, i }) => (
+          <text key={yr} x={xS(i)} y={H - PB + 14} fontSize="9" fill="#6a7a8a" textAnchor="middle">{yr}</text>
+        ))}
 
-      <line x1={xS(splitIdx)} y1={PT} x2={xS(splitIdx)} y2={H - PB}
-        stroke="#2e3a4a" strokeWidth="1" strokeDasharray="3,3" />
-      <text x={xS(splitIdx) + 5} y={PT + 10} fontSize="8" fill="#8a9ab0" letterSpacing="0.5">
-        FORECAST →
-      </text>
+        <line x1={xS(splitIdx)} y1={PT} x2={xS(splitIdx)} y2={H - PB}
+          stroke="#2e3a4a" strokeWidth="1" strokeDasharray="3,3" />
+        <text x={xS(splitIdx) + 5} y={PT + 10} fontSize="8" fill="#8a9ab0" letterSpacing="0.5">
+          FORECAST →
+        </text>
 
-      <path d={`${upperPath} ${lowerPathRev} Z`} fill="rgba(245,158,11,0.07)" />
-      <path d={upperPath} fill="none" stroke="rgba(245,158,11,0.2)" strokeWidth="0.7" strokeDasharray="3,2" />
+        <path d={`${upperPath} ${lowerPathRev} Z`} fill="rgba(245,158,11,0.07)" />
+        <path d={upperPath} fill="none" stroke="rgba(245,158,11,0.2)" strokeWidth="0.7" strokeDasharray="3,2" />
 
-      <path d={`${histPath} L${xS(splitIdx)},${H - PB} L${xS(0)},${H - PB} Z`} fill="url(#histFill)" />
+        <path d={`${histPath} L${xS(splitIdx)},${H - PB} L${xS(0)},${H - PB} Z`} fill="url(#histFill)" />
 
-      <path d={histPath} fill="none" stroke={catColor} strokeWidth="1.8" />
+        <path d={histPath} fill="none" stroke={catColor} strokeWidth="1.8" />
 
-      <path d={forePath} fill="none" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="5,3" />
+        <path d={forePath} fill="none" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="5,3" />
 
-      {histVals.slice(-5).map((v, i) => (
-        <circle key={i} cx={xS(histVals.length - 5 + i)} cy={yS(v)} r="2.5"
-          fill={catColor} stroke="#0f1825" strokeWidth="1.3" />
-      ))}
+        {histVals.slice(-5).map((v, i) => (
+          <circle key={i} cx={xS(histVals.length - 5 + i)} cy={yS(v)} r="2.5"
+            fill={catColor} stroke="#0f1825" strokeWidth="1.3" />
+        ))}
 
-      {foreVals.map((v, i) => (
-        <circle key={i} cx={xS(splitIdx + 1 + i)} cy={yS(v)} r="3"
-          fill="#f59e0b" stroke="#0f1825" strokeWidth="1.3" />
-      ))}
-    </svg>
+        {foreVals.map((v, i) => (
+          <circle key={i} cx={xS(splitIdx + 1 + i)} cy={yS(v)} r="3"
+            fill="#f59e0b" stroke="#0f1825" strokeWidth="1.3" />
+        ))}
+      </svg>
+    </div>
   );
 }
 
@@ -154,6 +159,7 @@ export default function PriceForecast() {
   const [catFilter, setCatFilter]       = useState("All");
   const [horizon, setHorizon]           = useState(5);
   const [view, setView]                 = useState("chart");
+  const [zoom, setZoom]                 = useState(1); // Added Zoom State
   const [loadingList, setLoadingList]   = useState(true);
   const [loadingFore, setLoadingFore]   = useState(false);
   const [error, setError]               = useState(null);
@@ -214,8 +220,9 @@ export default function PriceForecast() {
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
         select option { background: #0a0e1a; }
-        ::-webkit-scrollbar { width:4px; }
-        ::-webkit-scrollbar-thumb { background:#1e2a3a; border-radius:2px; }
+        ::-webkit-scrollbar { width:4px; height:6px; }
+        ::-webkit-scrollbar-thumb { background:#2e3a4a; border-radius:3px; }
+        ::-webkit-scrollbar-thumb:hover { background:#4a5a6a; }
       `}</style>
 
       {/* ── Page Title ── */}
@@ -240,7 +247,7 @@ export default function PriceForecast() {
 
       {/* ── Filter Row ── */}
       <div style={{
-        display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
+        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, // Responsive grid
         marginBottom: 18, background: "#0f1825",
         border: "1px solid #1e2a3a", borderRadius: 8, padding: "14px 18px"
       }}>
@@ -270,32 +277,16 @@ export default function PriceForecast() {
       </div>
 
       {/* ── Stat Cards ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 18 }}>
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", // Responsive stat cards
+        gap: 12, marginBottom: 18 
+      }}>
         {[
-          {
-            label: "CURRENT PRICE",
-            value: loadingList ? null : `${fmt(latest)}`,
-            sub: curMeta ? `${curMeta.unit} · ${curMeta.latest_year}` : "—",
-            color: "#ffffff"
-          },
-          {
-            label: "YOY CHANGE",
-            value: loadingList ? null : pct(yoy),
-            sub: `vs ${curMeta ? curMeta.latest_year - 1 : "—"}`,
-            color: yoy >= 0 ? "#00ff88" : "#ff4444"
-          },
-          {
-            label: `${horizon}Y TARGET`,
-            value: loadingFore || !target ? null : `${fmt(target)}`,
-            sub: `${horizon}Y ensemble`,
-            color: "#f59e0b"
-          },
-          {
-            label: `${horizon}Y RETURN`,
-            value: loadingFore || !target ? null : pct(ret),
-            sub: signal,
-            color: ret >= 0 ? "#00ff88" : "#ff4444"
-          },
+          { label: "CURRENT PRICE", value: loadingList ? null : `${fmt(latest)}`, sub: curMeta ? `${curMeta.unit} · ${curMeta.latest_year}` : "—", color: "#ffffff" },
+          { label: "YOY CHANGE", value: loadingList ? null : pct(yoy), sub: `vs ${curMeta ? curMeta.latest_year - 1 : "—"}`, color: yoy >= 0 ? "#00ff88" : "#ff4444" },
+          { label: `${horizon}Y TARGET`, value: loadingFore || !target ? null : `${fmt(target)}`, sub: `${horizon}Y ensemble`, color: "#f59e0b" },
+          { label: `${horizon}Y RETURN`, value: loadingFore || !target ? null : pct(ret), sub: signal, color: ret >= 0 ? "#00ff88" : "#ff4444" },
         ].map(({ label, value, sub, color }) => (
           <div key={label} style={{
             background: "#0f1825", border: "1px solid #1e2a3a",
@@ -314,12 +305,13 @@ export default function PriceForecast() {
       </div>
 
       {/* ── Two-panel layout ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 12 }}>
+      {/* minmax(0, 1fr) ensures the left panel shrinks correctly when a sidebar opens instead of overflowing */}
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 360px", gap: 12 }}>
 
         {/* Left: Chart / Table panel */}
         <div style={{
           background: "#0f1825", border: "1px solid #1e2a3a",
-          borderRadius: 8, padding: "20px 22px"
+          borderRadius: 8, padding: "20px 22px", minWidth: 0 // prevents flex child blowout
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
             <div>
@@ -340,15 +332,26 @@ export default function PriceForecast() {
                 )}
               </div>
             </div>
-            <div style={{ display: "flex", gap: 4 }}>
-              {["chart", "table"].map(t => (
-                <button key={t} onClick={() => setView(t)} style={{
-                  fontSize: 10, padding: "4px 12px", borderRadius: 4, cursor: "pointer", letterSpacing: "0.5px",
-                  background: view === t ? "#1e2a3a" : "transparent",
-                  border: view === t ? "1px solid #2e3a4a" : "1px solid transparent",
-                  color: view === t ? "#dde3f0" : "#6a7a8a"
-                }}>{t.toUpperCase()}</button>
-              ))}
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              {/* Zoom Controls */}
+              {view === "chart" && (
+                <div style={{ display: "flex", alignItems: "center", background: "#1e2a3a", borderRadius: 4, padding: "2px 4px" }}>
+                  <button onClick={() => setZoom(z => Math.max(1, z - 0.5))} style={{ width: 22, height: 22, background: "transparent", border: "none", color: "#dde3f0", cursor: "pointer", fontSize: 14 }}>-</button>
+                  <span style={{ fontSize: 10, color: "#8a9ab0", minWidth: 26, textAlign: "center", userSelect: "none" }}>{zoom}x</span>
+                  <button onClick={() => setZoom(z => Math.min(4, z + 0.5))} style={{ width: 22, height: 22, background: "transparent", border: "none", color: "#dde3f0", cursor: "pointer", fontSize: 14 }}>+</button>
+                </div>
+              )}
+              
+              <div style={{ display: "flex", gap: 4 }}>
+                {["chart", "table"].map(t => (
+                  <button key={t} onClick={() => setView(t)} style={{
+                    fontSize: 10, padding: "4px 12px", borderRadius: 4, cursor: "pointer", letterSpacing: "0.5px",
+                    background: view === t ? "#1e2a3a" : "transparent",
+                    border: view === t ? "1px solid #2e3a4a" : "1px solid transparent",
+                    color: view === t ? "#dde3f0" : "#6a7a8a"
+                  }}>{t.toUpperCase()}</button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -379,7 +382,7 @@ export default function PriceForecast() {
             loadingFore || !forecastData ? (
               <div style={{ height: 210 }}><Skeleton h={210} radius={6} /></div>
             ) : (
-              <ForecastChart historical={forecastData.historical} foreYears={forecastData.fore_years} activeModelData={activeModelData} catColor={catColor} />
+              <ForecastChart historical={forecastData.historical} foreYears={forecastData.fore_years} activeModelData={activeModelData} catColor={catColor} zoom={zoom} />
             )
           ) : (
             <div style={{ overflowX: "auto", maxHeight: 280, overflowY: "auto" }}>

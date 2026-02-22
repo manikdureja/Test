@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import StatCard from "../components/StatCard";
 import DealTable from "../components/DealTable";
 import RightPanel from "../components/RightPanel";
 import FXMonitor from "../components/FXMonitor";
 import PriceForecast from "../components/PriceForecast";
 import DealDetailPanel from "../components/DealDetailPanel";
+
 const TABS = ["Deal Table", "Risk Analytics", "FX Monitor", "Price Forecast", "Documents"];
 
 const INITIAL_DEALS = [
@@ -52,7 +53,6 @@ function DocumentsTab({ isDark, deals }) {
   const surface2= isDark ? "#0d1520" : "#f8faff";
   const text    = isDark ? "#e2e8f0" : "#0a0e1a";
   const muted   = isDark ? "#475569" : "#94a3b8";
-  const subtle  = isDark ? "#1e293b" : "#eef2ff";
 
   const processFiles = (files) => {
     const arr = Array.from(files).map(f => ({
@@ -100,7 +100,6 @@ function DocumentsTab({ isDark, deals }) {
     return matchDeal && matchType && matchSearch;
   });
 
-  // Group by deal
   const grouped = {};
   filtered.forEach(d => {
     const key = d.dealId === "all" ? "General" : d.dealId;
@@ -110,10 +109,8 @@ function DocumentsTab({ isDark, deals }) {
 
   return (
     <div style={{ padding: "20px 24px", minHeight: "100%" }}>
-
       {/* Toolbar */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, flexWrap: "wrap" }}>
-        {/* Search */}
         <div style={{ position: "relative", flex: 1, minWidth: 180 }}>
           <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: muted, fontSize: 13 }}>🔍</span>
           <input
@@ -129,7 +126,6 @@ function DocumentsTab({ isDark, deals }) {
           />
         </div>
 
-        {/* Deal filter */}
         <select
           value={filterDeal}
           onChange={e => setFilterDeal(e.target.value)}
@@ -139,7 +135,6 @@ function DocumentsTab({ isDark, deals }) {
           {deals.map(d => <option key={d.id} value={d.id}>{d.id} — {d.product}</option>)}
         </select>
 
-        {/* Type filter */}
         <select
           value={filterType}
           onChange={e => setFilterType(e.target.value)}
@@ -149,7 +144,6 @@ function DocumentsTab({ isDark, deals }) {
           {DOC_TYPES.map(t => <option key={t.key} value={t.key}>{t.label}</option>)}
         </select>
 
-        {/* Upload btn */}
         <button
           onClick={() => fileRef.current.click()}
           style={{
@@ -177,7 +171,7 @@ function DocumentsTab({ isDark, deals }) {
         ))}
       </div>
 
-      {/* Drop zone + content */}
+      {/* Drop zone */}
       <div
         onDragOver={e => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
@@ -192,7 +186,6 @@ function DocumentsTab({ isDark, deals }) {
         }}
       >
         {docs.length === 0 ? (
-          /* Empty state */
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: 40, marginBottom: 12, opacity: 0.4 }}>📂</div>
             <div style={{ color: muted, fontSize: 13, fontWeight: 600, marginBottom: 6 }}>No documents yet</div>
@@ -208,19 +201,15 @@ function DocumentsTab({ isDark, deals }) {
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "32px 0", color: muted, fontSize: 12 }}>No documents match your filters.</div>
         ) : (
-          /* Grouped list */
           Object.entries(grouped).map(([dealKey, items]) => {
             const dealObj = deals.find(d => d.id === dealKey);
             return (
               <div key={dealKey} style={{ marginBottom: 22 }}>
-                {/* Group header */}
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                   <span style={{ color: "#00e5ff", fontSize: 11, fontWeight: 700, fontFamily: "monospace" }}>{dealKey}</span>
                   {dealObj && <span style={{ color: muted, fontSize: 10 }}>— {dealObj.product}</span>}
                   <span style={{ fontSize: 10, color: muted, marginLeft: "auto" }}>{items.length} file{items.length !== 1 ? "s" : ""}</span>
                 </div>
-
-                {/* Doc cards */}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
                   {items.map(doc => {
                     const fi = FILE_ICON(doc.ext);
@@ -234,13 +223,11 @@ function DocumentsTab({ isDark, deals }) {
                         onMouseEnter={e => e.currentTarget.style.borderColor = "#00e5ff44"}
                         onMouseLeave={e => e.currentTarget.style.borderColor = border}
                       >
-                        {/* Preview / icon area */}
                         <div style={{ height: 72, background: isDark ? "#060c16" : "#f0f4ff", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                           {doc.previewUrl
                             ? <img src={doc.previewUrl} alt={doc.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                             : <span style={{ fontSize: 24, fontWeight: 800, color: fi.color, fontFamily: "monospace", letterSpacing: "-0.03em" }}>{fi.icon}</span>
                           }
-                          {/* Type badge */}
                           <span style={{
                             position: "absolute", top: 6, right: 6,
                             fontSize: 9, padding: "2px 6px", borderRadius: 3,
@@ -249,8 +236,6 @@ function DocumentsTab({ isDark, deals }) {
                             fontWeight: 600, letterSpacing: "0.05em",
                           }}>{dt.icon} {dt.label}</span>
                         </div>
-
-                        {/* Info */}
                         <div style={{ padding: "10px 12px" }}>
                           <div style={{ fontSize: 11, fontWeight: 600, color: text, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={doc.name}>{doc.name}</div>
                           {doc.note && <div style={{ fontSize: 10, color: muted, marginBottom: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{doc.note}</div>}
@@ -271,8 +256,6 @@ function DocumentsTab({ isDark, deals }) {
             );
           })
         )}
-
-        {/* Drop overlay hint */}
         {dragOver && (
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
             <div style={{ background: isDark ? "#040d18e0" : "#ffffffe0", borderRadius: 12, padding: "16px 28px", border: "1px solid #00e5ff", color: "#00e5ff", fontWeight: 600, fontSize: 13 }}>
@@ -298,7 +281,6 @@ function DocumentsTab({ isDark, deals }) {
               <div style={{ color: muted, fontSize: 11 }}>{pendingFiles.length} file{pendingFiles.length !== 1 ? "s" : ""} selected</div>
             </div>
 
-            {/* File list preview */}
             <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 16, maxHeight: 140, overflowY: "auto" }}>
               {pendingFiles.map((pf, i) => {
                 const fi = FILE_ICON(pf.ext);
@@ -312,7 +294,6 @@ function DocumentsTab({ isDark, deals }) {
               })}
             </div>
 
-            {/* Form */}
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div>
                 <label style={{ fontSize: 10, color: muted, letterSpacing: "0.08em", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Link to Deal</label>
@@ -384,6 +365,37 @@ export default function Dashboard({ newDeal, isDark }) {
   const [completedToast, setCompletedToast] = useState(null);
   const [showCompleted, setShowCompleted]   = useState(false);
 
+  // ── Right Panel Resizing State ──
+  const [rightPanelWidth, setRightPanelWidth] = useState(320);
+  const isDraggingRight = useRef(false);
+
+  const handleRightMouseDown = () => {
+    isDraggingRight.current = true;
+    document.body.style.cursor = "col-resize";
+  };
+
+  const handleRightMouseMove = useCallback((e) => {
+    if (isDraggingRight.current) {
+      // Calculates width from the right edge of the screen
+      const newWidth = Math.min(Math.max(window.innerWidth - e.clientX, 250), 550);
+      setRightPanelWidth(newWidth);
+    }
+  }, []);
+
+  const handleRightMouseUp = useCallback(() => {
+    isDraggingRight.current = false;
+    document.body.style.cursor = "default";
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleRightMouseMove);
+    window.addEventListener("mouseup", handleRightMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleRightMouseMove);
+      window.removeEventListener("mouseup", handleRightMouseUp);
+    };
+  }, [handleRightMouseMove, handleRightMouseUp]);
+
   const allDeals = newDeal
     ? [...deals, {
         id: `TIQ-${String(deals.length + 19).padStart(4, "0")}`,
@@ -422,7 +434,9 @@ export default function Dashboard({ newDeal, isDark }) {
   const tabInactive = isDark ? "text-[#4a5a6a] border-transparent hover:text-[#8a9ab0]" : "text-[#9aabb0] border-transparent hover:text-[#5a6a8a]";
 
   return (
-    <div className={`flex h-full transition-colors duration-300 ${bg}`}>
+    <div className={`flex h-full w-full overflow-hidden transition-colors duration-300 ${bg}`}>
+      
+      {/* ── Main Left Section ── */}
       <div className="flex-1 min-w-0 overflow-y-auto">
 
         {/* ── Stat bar ── */}
@@ -480,17 +494,32 @@ export default function Dashboard({ newDeal, isDark }) {
           {tab === "FX Monitor"      && <FXMonitor isDark={isDark} />}
           {tab === "Price Forecast"  && <PriceForecast isDark={isDark} />}
           {tab === "Risk Analytics"  && (
-            <div className="flex items-center justify-center h-64">
-              <p className={`font-mono text-sm ${isDark ? "text-[#3a4a5a]" : "text-[#aab0c0]"}`}>Risk Analytics — Connect ML model endpoint</p>
+            <div className="p-8 flex items-center justify-center text-[#6a7a8a] font-mono text-xs">
+               Risk Analytics Engine — Select a deal to view details.
             </div>
           )}
           {tab === "Documents" && <DocumentsTab isDark={isDark} deals={allDeals} />}
         </div>
       </div>
 
-      <RightPanel isDark={isDark} />
+      {/* ── Resizable Right Panel ── */}
+      <div 
+        style={{ width: rightPanelWidth, transition: isDraggingRight.current ? "none" : "width 0.2s ease" }}
+        className={`relative flex-shrink-0 border-l h-full ${isDark ? "border-[#1e2a3a] bg-[#0f1825]" : "border-[#dde3f0] bg-white"}`}
+      >
+        {/* Drag Handle on the LEFT side of the right panel */}
+        <div 
+          onMouseDown={handleRightMouseDown}
+          className="absolute left-[-4px] top-0 bottom-0 w-2 cursor-col-resize z-40 hover:bg-[#00e5ff] hover:opacity-20 transition-colors"
+        />
+        
+        {/* Render the actual RightPanel component inside this wrapper */}
+        <div className="h-full w-full overflow-y-auto overflow-x-hidden">
+          <RightPanel isDark={isDark} />
+        </div>
+      </div>
 
-      {/* ── Deal Detail Panel (replaces old drawer) ── */}
+      {/* ── Deal Detail Panel ── */}
       <DealDetailPanel deal={selected} onClose={() => setSelected(null)} />
 
       {/* ── Completed toast ── */}

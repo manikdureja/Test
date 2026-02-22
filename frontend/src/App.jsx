@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import AddDealModal from "./components/AddDealModal";
@@ -18,8 +18,47 @@ export default function App() {
   const [isDark, setIsDark] = useState(true);
   const [user, setUser] = useState(null);
 
+  // --- Sidebar Resizing State ---
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(240); // Default width in pixels
+  const isDragging = useRef(false);
+
+  // --- 1. Lifted Filter State ---
+  const [filterValues, setFilterValues] = useState({
+    0: "All Countries", 1: "All Products", 2: "All Risk Levels", 3: "Last 30 days",
+  });
+
   const handleLogin = (userData) => { setUser(userData); setPage("app"); };
   const handleLogout = () => { setUser(null); setPage("landing"); setActiveNav("dashboard"); };
+
+  // --- Drag Logic ---
+  const handleMouseDown = () => {
+    isDragging.current = true;
+    document.body.style.cursor = "col-resize";
+  };
+
+  const handleMouseMove = useCallback((e) => {
+    if (isDragging.current) {
+      // Prevent sidebar from getting too small or too large
+      const newWidth = Math.min(Math.max(e.clientX, 160), 400); 
+      setSidebarWidth(newWidth);
+      if (newWidth > 160 && isSidebarCollapsed) setIsSidebarCollapsed(false);
+    }
+  }, [isSidebarCollapsed]);
+
+  const handleMouseUp = useCallback(() => {
+    isDragging.current = false;
+    document.body.style.cursor = "default";
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
 
   if (page === "landing") return (
     <div>
@@ -45,7 +84,8 @@ export default function App() {
 
   const renderPage = () => {
     switch (activeNav) {
-      case "dashboard": return <Dashboard newDeal={latestDeal} isDark={isDark} />;
+      // --- 2. Pass filters to Dashboard ---
+      case "dashboard": return <Dashboard newDeal={latestDeal} isDark={isDark} currentFilters={filterValues} />;
       case "fx":        return <FXMonitor isDark={isDark} />;
       case "forecast":  return <PriceForecast isDark={isDark} />;
       case "documents": return <Documents isDark={isDark} />;
@@ -74,10 +114,50 @@ export default function App() {
         onProfileClick={() => setActiveNav("profile")}
       />
 
-      <div className="flex pt-12 h-screen">
-        <Sidebar active={activeNav} onNav={setActiveNav} isDark={isDark} onProfileClick={() => setActiveNav("profile")} />
+      <div className="flex pt-12 h-screen relative">
+        
+        {/* ─── DYNAMIC LEFT SIDEBAR WRAPPER ─── */}
+        <div 
+          style={{ 
+            width: isSidebarCollapsed ? 68 : sidebarWidth,
+            transition: isDragging.current ? "none" : "width 0.2s ease"
+          }}
+          className={`relative flex-shrink-0 border-r ${isDark ? "border-[#1e2a3a] bg-[#0f1825]" : "border-[#dde3f0] bg-white"} z-10`}
+        >
+          {/* Collapse Toggle Button */}
+          <button 
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            className={`absolute -right-3.5 top-6 z-50 w-7 h-7 rounded-full border flex items-center justify-center text-xs cursor-pointer shadow-md transition-colors ${
+              isDark ? "bg-[#1e2a3a] border-[#2e3a4a] text-[#dde3f0] hover:bg-[#2e3a4a]" : "bg-white border-[#dde3f0] text-[#1e2a3a] hover:bg-[#f0f4ff]"
+            }`}
+          >
+            {isSidebarCollapsed ? "→" : "←"}
+          </button>
 
-        <main className="ml-52 flex-1 flex overflow-hidden h-full">
+          <div className="h-full w-full overflow-hidden">
+            <Sidebar 
+              active={activeNav} 
+              onNav={setActiveNav} 
+              isDark={isDark} 
+              onProfileClick={() => setActiveNav("profile")} 
+              isCollapsed={isSidebarCollapsed} 
+              // --- 3. Pass state and setter to Sidebar ---
+              filterValues={filterValues}
+              onFilterChange={setFilterValues}
+            />
+          </div>
+
+          {/* Drag Handle (Hidden when collapsed) */}
+          {!isSidebarCollapsed && (
+            <div 
+              onMouseDown={handleMouseDown}
+              className="absolute right-[-4px] top-0 bottom-0 w-2 cursor-col-resize z-40 hover:bg-[#00e5ff] hover:opacity-20 transition-colors"
+            />
+          )}
+        </div>
+
+        {/* ─── MAIN CONTENT ─── */}
+        <main className="flex-1 flex overflow-hidden h-full">
           {renderPage()}
         </main>
       </div>
