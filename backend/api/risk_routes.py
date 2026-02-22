@@ -1,14 +1,3 @@
-"""
-backend/api/risk_routes.py
----------------------------
-FastAPI router for Supply Chain Risk Scoring endpoints.
-Uses models trained on synthetic data by ml/risk_scoring/train.py.
-
-Mount in main app:
-    from backend.api.risk_routes import router as risk_router
-    app.include_router(risk_router)
-"""
-
 import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -93,9 +82,6 @@ def _scorer():
 
 def _input_to_dict(inp: RiskInput) -> dict:
     return inp.dict()
-
-
-# ── Routes ────────────────────────────────────────────────────────────────────
 
 @router.post("/score", response_model=RiskResult)
 def score_single(body: RiskInput):
@@ -182,3 +168,82 @@ def feature_info():
             ],
         },
     }
+
+import sys
+from pathlib import Path
+
+# ── Point to your risk score folder ──────────────────────────────────────────
+RISK_SCORE_DIR = Path(__file__).resolve().parents[2] / "risk score"
+sys.path.insert(0, str(RISK_SCORE_DIR))
+
+
+# ── Schemas ───────────────────────────────────────────────────────────────────
+class DealRiskRequest(BaseModel):
+    dealId:      str   = "UNKNOWN"
+    product:     str
+    origin:      str
+    destination: str
+    value:       float = 100000
+    margin:      float = 15.0
+    status:      str   = "PENDING"
+
+
+class DealRiskResponse(BaseModel):
+    deal_id:    str
+    risk_score: float
+    risk_band:  str
+    features_used: dict
+    resolved:   dict
+
+
+_deal_model = None
+
+def _get_deal_model():
+    global _deal_model
+    if _deal_model is None:
+        try:
+            from risk_score import load_or_train, DATA_PATH, MODEL_PATH
+            _deal_model = load_or_train(DATA_PATH, MODEL_PATH)
+        except Exception as e:
+            raise HTTPException(status_code=503, detail=f"Risk score model not ready: {e}")
+    return _deal_model
+
+@router.post("/api/risk-score", response_model=DealRiskResponse)
+def score_deal_from_form(req: DealRiskRequest):
+    """
+    Called by AddDealModal.jsx when user types product/origin/destination.
+    Maps form inputs → tariff/FX/HS/political features → 0-100 risk score.
+    """
+    try:
+        from risk_score import derive_features, predict_score, risk_band
+        model = _get_deal_model()
+        feats = derive_features(
+            product=req.product,
+            origin=req.origin,
+            destination=req.destination,
+            value_usd=req.value,
+            margin_pct=req.margin,
+            status=req.status,
+        )
+        score = predict_score(model, feats)
+        band  = risk_band(score)
+        return {
+            "deal_id":   req.dealId,
+            "risk_score": score,
+            "risk_band":  band,
+            "features_used": {
+                "tariff_risk":               feats["Tariff_Risk"],
+                "fx_volatility_pct":         feats["FX_Volatility_%"],
+                "hs_score":                  feats["HS_Score"],
+                "political_stability_index": feats["Political_Stability_Index"],
+            },
+            "resolved": {
+                "origin_country":      feats["_origin_country"],
+                "destination_country": feats["_dest_country"],
+            },
+        }
+    except ImportError:
+        raise HTTPException(
+            status_code=503,
+            detail="risk_score.py not found. Place it at: 'risk score/risk_score.py'"
+        )

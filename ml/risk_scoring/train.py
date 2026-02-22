@@ -1,19 +1,3 @@
-"""
-ml/risk_scoring/train.py
--------------------------
-Trains three risk scoring models on the synthetic supply chain dataset:
-
-    1. Ridge Regression       — fast linear baseline
-    2. Random Forest          — captures non-linear feature interactions
-    3. Gradient Boosting      — highest accuracy, production model
-
-All models are trained on the same feature set used in generate_synthetic_data.py.
-Saves trained models + a metadata JSON to ml/risk_scoring/artifacts/.
-
-Usage:
-    python ml/risk_scoring/train.py
-    python ml/risk_scoring/train.py --data data/train.csv --output ml/risk_scoring/artifacts
-"""
 
 import argparse
 import json
@@ -52,19 +36,19 @@ RISK_LABELS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
 MODEL_CONFIGS = {
     "ridge": {
         "class":  Ridge,
-        "params": {"alpha": 1.0},
+        "params": {"alpha": 10.0},  # Increased regularization to prevent overfitting
         "needs_scaling": True,
         "description": "Linear baseline — fast, interpretable",
     },
     "random_forest": {
         "class":  RandomForestRegressor,
-        "params": {"n_estimators": 200, "max_depth": 12, "min_samples_leaf": 4, "random_state": 42, "n_jobs": -1},
+        "params": {"n_estimators": 150, "max_depth": 8, "min_samples_leaf": 6, "random_state": 42, "n_jobs": -1},
         "needs_scaling": False,
         "description": "Ensemble of decision trees — handles non-linearities",
     },
     "gradient_boosting": {
         "class":  GradientBoostingRegressor,
-        "params": {"n_estimators": 200, "learning_rate": 0.08, "max_depth": 5, "subsample": 0.85, "random_state": 42},
+        "params": {"n_estimators": 150, "learning_rate": 0.05, "max_depth": 4, "subsample": 0.8, "min_samples_leaf": 5, "random_state": 42},
         "needs_scaling": False,
         "description": "Sequential boosting — highest accuracy, production model",
     },

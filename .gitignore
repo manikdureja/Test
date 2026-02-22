@@ -5,3 +5,6 @@ __pycache__
 .env
 .env.local
 node_modules/
+echo "ml/risk_scoring/artifacts/" >> .gitignore
+echo "data/*.csv" >> .gitignore
+echo "data_processing/generate_sys_data.py" >> .gitignore
