@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_URL || "https://test-price-forecasting.onrender.com/";
 
 async function apiFetch(path) {
   const res = await fetch(`${API_BASE}${path}`);
