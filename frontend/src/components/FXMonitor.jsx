@@ -1,4 +1,14 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+async function fetchFx() {
+  const res = await fetch(`${API_BASE}/api/fx`);
+  if (!res.ok) {
+    throw new Error(`FX API ${res.status}`);
+  }
+  return res.json();
+}
 
 // --- Static Data ---
 const DEALS = [
@@ -8,19 +18,18 @@ const DEALS = [
   { id: "TIQ-0022", product: "LED Components", origin: "Guangzhou", dest: "Delhi", value: 210000, margin: 16.3, risk: 65, status: "pending", eta: "Mar 12" },
 ];
 
-const LIVE_FX = [
-  { pair: "USD/INR", rate: 83.47, change: -0.23 },
-  { pair: "EUR/USD", rate: 1.0824, change: +0.004 },
-  { pair: "USD/CNY", rate: 7.2412, change: -0.01 },
-  { pair: "GBP/USD", rate: 1.2671, change: +0.009 },
-  { pair: "USD/AED", rate: 3.6725, change: 0.000 },
+const FALLBACK_FX = [
+  { pair: "EUR/USD", value: "1.0820", move: "->" },
+  { pair: "USD/JPY", value: "150.200", move: "->" },
+  { pair: "GBP/USD", value: "1.2670", move: "->" },
+  { pair: "USD/CHF", value: "0.8820", move: "->" },
 ];
 
-const VOL_INDEX = [
-  { pair: "USD/INR", value: 68, color: "#ff6b6b" }, // Red
-  { pair: "USD/CNY", value: 42, color: "#00e676" }, // Green
-  { pair: "EUR/USD", value: 31, color: "#00e676" }, // Green
-  { pair: "GBP/USD", value: 55, color: "#ffaa00" }, // Orange
+const FALLBACK_VOL = [
+  { pair: "EUR/USD", index: 31 },
+  { pair: "USD/JPY", index: 55 },
+  { pair: "GBP/USD", index: 42 },
+  { pair: "USD/CHF", index: 37 },
 ];
 
 // --- Helper Functions ---
@@ -40,6 +49,8 @@ export default function ImExIQDashboard({ isDark = true }) {
   const [filterCountry, setFilterCountry] = useState("all");
   const [filterProduct, setFilterProduct] = useState("all");
   const [filterRisk, setFilterRisk] = useState("all");
+  const [fxPayload, setFxPayload] = useState(null);
+  const [fxError, setFxError] = useState("");
 
   const countries = useMemo(() => ["all", ...Array.from(new Set(DEALS.map(d => d.dest))).sort()], []);
   const products = useMemo(() => ["all", ...Array.from(new Set(DEALS.map(d => d.product))).sort()], []);
@@ -63,6 +74,55 @@ export default function ImExIQDashboard({ isDark = true }) {
       delayed: filteredDeals.filter(item => item.status === "high").length
     };
   }, [filteredDeals]);
+
+  useEffect(() => {
+    let mounted = true;
+    let timer = null;
+
+    const load = async () => {
+      try {
+        const data = await fetchFx();
+        if (!mounted) return;
+        setFxPayload(data);
+        setFxError("");
+      } catch (err) {
+        if (!mounted) return;
+        setFxError(err?.message || "Failed to load FX");
+      } finally {
+        if (mounted) {
+          timer = setTimeout(load, 5000);
+        }
+      }
+    };
+
+    load();
+
+    return () => {
+      mounted = false;
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
+
+  const liveFx = fxPayload?.pairs?.length ? fxPayload.pairs : FALLBACK_FX;
+  const volIndex = fxPayload?.volatility?.length ? fxPayload.volatility : FALLBACK_VOL;
+
+  const moveDisplay = (move) => {
+    if (move === "UP") return "↑";
+    if (move === "DOWN") return "↓";
+    return "→";
+  };
+
+  const moveClass = (move) => {
+    if (move === "UP") return "text-[#00e676]";
+    if (move === "DOWN") return "text-[#ff6b6b]";
+    return "text-[#6a7a8a]";
+  };
+
+  const volColor = (value) => {
+    if (value >= 60) return "#ff6b6b";
+    if (value >= 45) return "#ffaa00";
+    return "#00e676";
+  };
 
   // --- Theme Classes ---
   const bg = isDark ? "bg-[#0a0e1a]" : "bg-[#f0f4ff]";
@@ -119,17 +179,19 @@ export default function ImExIQDashboard({ isDark = true }) {
         {/* Panel 1: Live FX Pairs */}
         <div className={`border rounded-xl p-6 ${card}`}>
           <h2 className="text-[11px] tracking-[0.15em] font-mono text-[#6a7a8a] mb-6 uppercase">Live FX Pairs</h2>
+          <div className="mb-3 text-[10px] font-mono text-[#6a7a8a]">
+            {fxError
+              ? `Using fallback data (${fxError})`
+              : `As of ${fxPayload?.asOf || "latest"}${fxPayload?.formula ? ` · ${fxPayload.formula}` : ""}`}
+          </div>
           <div className="space-y-4">
-            {LIVE_FX.map((fx) => {
-              const formatChange = (val) => val > 0 ? `+${val.toFixed(3)}` : val === 0 ? "0.000" : val.toFixed(2);
-              const colorClass = fx.change > 0 ? "text-[#00e676]" : fx.change < 0 ? "text-[#ff6b6b]" : "text-[#6a7a8a]";
-              
+            {liveFx.map((fx) => {
               return (
                 <div key={fx.pair} className="flex justify-between items-center">
                   <span className="font-mono font-semibold text-sm text-[#d0dde8]">{fx.pair}</span>
-                  <div className={`font-mono text-sm font-semibold ${colorClass}`}>
-                    <span className="mr-3">{fx.rate.toString().includes('.') ? fx.rate : fx.rate.toFixed(2)}</span>
-                    <span>{formatChange(fx.change)}</span>
+                  <div className={`font-mono text-sm font-semibold ${moveClass(fx.move)}`}>
+                    <span className="mr-3">{fx.value}</span>
+                    <span>{moveDisplay(fx.move)}</span>
                   </div>
                 </div>
               );
@@ -141,13 +203,13 @@ export default function ImExIQDashboard({ isDark = true }) {
         <div className={`border rounded-xl p-6 ${card}`}>
           <h2 className="text-[11px] tracking-[0.15em] font-mono text-[#6a7a8a] mb-6 uppercase">30-Day Volatility Index</h2>
           <div className="space-y-[1.125rem]">
-            {VOL_INDEX.map((vol) => (
+            {volIndex.map((vol) => (
               <div key={vol.pair} className="flex items-center">
                 <span className="font-mono text-xs text-[#6a7a8a] w-20">{vol.pair}</span>
                 <div className="flex-1 h-2 bg-[#1e2a3a] rounded-full overflow-hidden mx-4">
-                  <div className="h-full rounded-full" style={{ width: `${vol.value}%`, backgroundColor: vol.color }} />
+                  <div className="h-full rounded-full" style={{ width: `${vol.index}%`, backgroundColor: volColor(vol.index) }} />
                 </div>
-                <span className="font-mono text-xs text-[#d0dde8] w-6 text-right">{vol.value}</span>
+                <span className="font-mono text-xs text-[#d0dde8] w-6 text-right">{vol.index}</span>
               </div>
             ))}
           </div>
