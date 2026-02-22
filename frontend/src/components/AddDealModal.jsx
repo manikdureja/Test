@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Status options matching existing app
 const STATUSES = ["PENDING", "ACTIVE", "HIGH", "IN TRANSIT"];
@@ -76,24 +76,37 @@ export default function AddDealModal({ isOpen, onClose, onSubmit, isDark }) {
       setRiskLoading(true);
       setRiskError(null);
       try {
-        const res = await fetch(`${API_BASE}/api/risk-score`, {
+        const value = parseFloat(form.value) || 100000;
+        const margin = parseFloat(form.margin) || 15;
+        const product = form.product.toLowerCase();
+        const origin = form.origin.toLowerCase();
+
+        const payload = {
+          supplier_reliability:
+            product.includes("electronics") ? 0.72 :
+            product.includes("pharma") ? 0.86 :
+            product.includes("steel") ? 0.78 : 0.8,
+          transport_delay_days:
+            form.status === "HIGH" ? 8 :
+            form.status === "IN TRANSIT" ? 4 : 2,
+          geo_political_risk:
+            origin.includes("china") ? 0.62 :
+            origin.includes("russia") ? 0.8 : 0.35,
+          weather_risk: 0.25,
+          inventory_level: Math.max(50, Math.min(600, Math.round(200 + (margin - 15) * 10))),
+          currency_volatility: Math.max(0, Math.min(0.1, value > 300000 ? 0.06 : 0.03)),
+        };
+
+        const res = await fetch(`${API_BASE}/api/risk/score`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            dealId:      "PREVIEW",
-            product:     form.product,
-            origin:      form.origin,
-            destination: form.destination,
-            value:       parseFloat(form.value)  || 100000,
-            margin:      parseFloat(form.margin) || 15,
-            status:      form.status,
-          }),
+          body: JSON.stringify(payload),
         });
         const data = await res.json();
-        if (data.risk_score !== undefined) {
-          setRiskScore(data.risk_score);
-          setRiskBand(data.risk_band);
-          setRiskDetails(data.features_used);
+        if (data.risk_score_pct !== undefined) {
+          setRiskScore(data.risk_score_pct);
+          setRiskBand(data.risk_tier);
+          setRiskDetails(data.feature_contributions || null);
         } else {
           throw new Error(data.error || "No score returned");
         }

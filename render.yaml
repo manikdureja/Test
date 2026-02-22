@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: imexiq-api
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.10
+      - key: CORS_ORIGINS
+        sync: false
+      - key: RISK_ARTIFACTS_DIR
+        value: ml/risk_scoring/artifacts
+      - key: FX_API_BASE_URL
+        value: https://api.frankfurter.app
+      - key: FX_API_KEY
+        sync: false
+      - key: FX_API_KEY_PARAM
+        value: access_key
