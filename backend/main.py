@@ -41,13 +41,7 @@ cors_origins = [
     if origin.strip()
 ]
 if not cors_origins:
-    cors_origins = [
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:3000",
-        "https://im-ex-iq.vercel.app"
-    ]
+    cors_origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
