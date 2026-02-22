@@ -86,6 +86,7 @@ export default function App() {
     switch (activeNav) {
       // --- 2. Pass filters to Dashboard ---
       case "dashboard": return <Dashboard newDeal={latestDeal} isDark={isDark} currentFilters={filterValues} />;
+      case "deals":     return <Dashboard newDeal={latestDeal} isDark={isDark} currentFilters={filterValues} initialTab="Deal Table" dealStatusFilter="ACTIVE" />;
       case "fx":        return <FXMonitor isDark={isDark} />;
       case "forecast":  return <PriceForecast isDark={isDark} />;
       case "documents": return <Documents isDark={isDark} />;

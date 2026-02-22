@@ -7,7 +7,7 @@ import PriceForecast from "../components/PriceForecast";
 import DealDetailPanel from "../components/DealDetailPanel";
 import AddDealModal from "../components/AddDealModal";
 
-const TABS = ["Deal Table", "Risk Analytics", "FX Monitor", "Price Forecast", "Documents"];
+const TABS = ["Deal Table", "FX Monitor", "Price Forecast", "Documents"];
 
 const INITIAL_DEALS = [
   { id: "TIQ-0019", product: "Electronics — PCBs",  origin: "Shenzhen",  destination: "Mumbai",      value: 320000, margin: "14.2", riskScore: 72, status: "HIGH",    eta: "Mar 4",  completed: false, qty: 4200,  tariffRate: 18.5, currency: "USD/INR", fxRate: 83.47, delayDays: 3 },
@@ -208,16 +208,21 @@ function DocumentsTab({ isDark, deals }) {
 }
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
-export default function Dashboard({ isDark, newDeal }) {
-  const [tab, setTab]               = useState("Deal Table");
+export default function Dashboard({ isDark, newDeal, initialTab = "Deal Table", dealStatusFilter = null }) {
+  const [tab, setTab]               = useState(initialTab);
   const [deals, setDeals]           = useState(INITIAL_DEALS);
   const [selected, setSelected]     = useState(null);
   const [completedToast, setCompletedToast] = useState(null);
   const [showCompleted, setShowCompleted]   = useState(false);
 
   const [rpw, setRpw]           = useState(320);
+  const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
   const isDraggingRight         = useRef(false);
-  const handleRightMouseDown    = () => { isDraggingRight.current = true; document.body.style.cursor = "col-resize"; };
+  const handleRightMouseDown    = () => {
+    if (!isRightPanelOpen) return;
+    isDraggingRight.current = true;
+    document.body.style.cursor = "col-resize";
+  };
   const handleRightMouseMove    = useCallback((e) => { if (isDraggingRight.current) setRpw(Math.min(Math.max(window.innerWidth - e.clientX, 250), 550)); }, []);
   const handleRightMouseUp      = useCallback(() => { isDraggingRight.current = false; document.body.style.cursor = "default"; }, []);
   useEffect(() => {
@@ -225,6 +230,10 @@ export default function Dashboard({ isDark, newDeal }) {
     window.addEventListener("mouseup", handleRightMouseUp);
     return () => { window.removeEventListener("mousemove", handleRightMouseMove); window.removeEventListener("mouseup", handleRightMouseUp); };
   }, [handleRightMouseMove, handleRightMouseUp]);
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
 
   // Watch for new deals from the modal and add them to the deals list
   useEffect(() => {
@@ -259,6 +268,7 @@ export default function Dashboard({ isDark, newDeal }) {
   };
 
   const activeDeals    = deals.filter(d => !d.completed);
+  const visibleDeals   = dealStatusFilter ? activeDeals.filter(d => d.status === dealStatusFilter) : activeDeals;
   const completedDeals = deals.filter(d =>  d.completed);
   const totalExposure  = (activeDeals.reduce((s, d) => s + d.value, 0) / 1e6).toFixed(1);
   const avgRisk        = activeDeals.length ? Math.round(activeDeals.reduce((s, d) => s + d.riskScore, 0) / activeDeals.length) : 0;
@@ -282,8 +292,6 @@ export default function Dashboard({ isDark, newDeal }) {
           </div>
           <StatCard label="Total Exposure"    value={`$${totalExposure}M`} sub="⚡ FX var ±2.1%"      isDark={isDark} />
           <StatCard label="Avg Risk Score"     value={avgRisk}              sub="↑ 4pts vs last month" subColor={avgRisk > 60 ? "#ff4444" : "#ffaa00"} isDark={isDark} />
-          <StatCard label="USD / INR"          value="83.47"                sub="↓ 0.23"               subColor="#ff4444" isDark={isDark} />
-          <StatCard label="EUR / USD"          value="1.082"                sub="↑ 0.004"              isDark={isDark} />
           <StatCard label="Shipments En Route" value="11"                   sub="2 delayed"            subColor="#ffaa00" isDark={isDark} />
           <StatCard label="Margin Avg"         value="18.4%"                sub="↑ 1.2%"               isDark={isDark} />
         </div>
@@ -304,7 +312,7 @@ export default function Dashboard({ isDark, newDeal }) {
         <div className={`min-h-full transition-colors duration-300 ${isDark ? "bg-[#0a0e1a]" : "bg-[#f8faff]"}`}>
           {tab === "Deal Table" && (
             <>
-              <DealTable deals={activeDeals} onRowClick={setSelected} isDark={isDark} />
+              <DealTable deals={visibleDeals} onRowClick={setSelected} isDark={isDark} />
               {showCompleted && completedDeals.length > 0 && (
                 <div className={`border-t mt-2 ${isDark ? "border-[#1e2a3a]" : "border-[#dde3f0]"}`}>
                   <div className="px-4 py-2 flex items-center gap-2">
@@ -317,15 +325,31 @@ export default function Dashboard({ isDark, newDeal }) {
           )}
           {tab === "FX Monitor"     && <FXMonitor isDark={isDark} />}
           {tab === "Price Forecast" && <PriceForecast isDark={isDark} />}
-          {tab === "Risk Analytics" && <div className="p-8 flex items-center justify-center text-[#6a7a8a] font-mono text-xs">Risk Analytics Engine — Select a deal to view details.</div>}
           {tab === "Documents"      && <DocumentsTab isDark={isDark} deals={deals} />}
         </div>
       </div>
 
       {/* Right panel */}
-      <div style={{ width: rpw }} className={`relative flex-shrink-0 border-l h-full ${isDark ? "border-[#1e2a3a] bg-[#0f1825]" : "border-[#dde3f0] bg-white"}`}>
-        <div onMouseDown={handleRightMouseDown} className="absolute left-[-4px] top-0 bottom-0 w-2 cursor-col-resize z-40 hover:bg-[#00e5ff] hover:opacity-20 transition-colors" />
-        <div className="h-full w-full overflow-y-auto overflow-x-hidden"><RightPanel isDark={isDark} /></div>
+      <div style={{ width: isRightPanelOpen ? rpw : 44 }} className={`relative flex-shrink-0 border-l h-full transition-all duration-200 ${isDark ? "border-[#1e2a3a] bg-[#0f1825]" : "border-[#dde3f0] bg-white"}`}>
+        {isRightPanelOpen && (
+          <div onMouseDown={handleRightMouseDown} className="absolute left-[-4px] top-0 bottom-0 w-2 cursor-col-resize z-40 hover:bg-[#00e5ff] hover:opacity-20 transition-colors" />
+        )}
+        <button
+          onClick={() => setIsRightPanelOpen(p => !p)}
+          className={`absolute left-1 top-2 z-50 h-7 w-7 rounded border text-xs font-bold transition-colors ${isDark ? "border-[#1e2a3a] text-[#8a9ab0] hover:text-white hover:border-[#00e5ff]/60 bg-[#0a1220]" : "border-[#dde3f0] text-[#5a6a8a] hover:text-[#0a0e1a] hover:border-[#00e5ff]/60 bg-white"}`}
+          title={isRightPanelOpen ? "Collapse News Panel" : "Expand News Panel"}
+        >
+          {isRightPanelOpen ? ">" : "<"}
+        </button>
+        {isRightPanelOpen ? (
+          <div className="h-full w-full overflow-y-auto overflow-x-hidden">
+            <RightPanel isDark={isDark} />
+          </div>
+        ) : (
+          <div className="h-full flex items-center justify-center">
+            <span className={`text-[10px] tracking-[0.2em] font-mono [writing-mode:vertical-rl] rotate-180 ${isDark ? "text-[#3a4a5a]" : "text-[#aab0c0]"}`}>NEWS</span>
+          </div>
+        )}
       </div>
 
       {/* Deal detail panel */}

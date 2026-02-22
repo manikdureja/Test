@@ -12,15 +12,13 @@ export default function Navbar({ onAddDeal, isDark, onToggleTheme, user, onProfi
   const muted    = isDark ? "text-[#3a4a5a]" : "text-[#aab0c0]";
   const userText = isDark ? "text-[#8a9ab0]" : "text-[#6a7a8a]";
   const avatarBg = isDark ? "bg-[#1e2a3a] border-[#2e3a4a]" : "bg-[#eef2ff] border-[#dde3f0]";
-  const logoText = isDark ? "text-white" : "text-[#0a0e1a]";
 
   return (
     <nav className={`h-12 border-b flex items-center justify-between px-6 z-50 fixed top-0 left-0 right-0 transition-colors duration-300 ${nav}`}>
       <div className="flex items-center gap-3">
-        <span className={`font-black text-lg tracking-tight ${logoText}`}>
-          Trade<span className="text-[#00e5ff]">IQ</span>
+        <span className="font-black text-lg tracking-tight text-white">
+          ImEx<span className="text-[#a855f7]">IQ</span>
         </span>
-        <span className={`text-xs font-mono ${muted}`}>// Global Trade Intelligence</span>
       </div>
 
       <div className="flex items-center gap-6">
